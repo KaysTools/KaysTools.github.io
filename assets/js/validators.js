@@ -1,66 +1,91 @@
-/* =========================================================
+/* ==========================================================================
    VALIDATORS.JS
-   Strict, deterministic input validation
-========================================================= */
+   Deterministic, OSINT-safe input validation
+   ========================================================================== */
 
-/* -------------------------
+/* --------------------------------------------------------------------------
    REGEX DEFINITIONS
-------------------------- */
+-------------------------------------------------------------------------- */
 
-// IPv4 (no geo guessing, no DNS)
-const ipRegex =
+/* IPv4 (no CIDR, no DNS resolution) */
+const IPV4_REGEX =
   /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/;
 
-// Domain (no protocol, no path)
-const domainRegex =
+/* Domain (no protocol, no path, ASCII only) */
+const DOMAIN_REGEX =
   /^(?!:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
 
-// Email (basic OSINT-safe)
-const emailRegex =
+/* Email (OSINT-safe, non-RFC-exhaustive) */
+const EMAIL_REGEX =
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Username (generic, platform-agnostic)
-const usernameRegex =
+/* Username (platform-agnostic baseline) */
+const USERNAME_REGEX =
   /^[a-zA-Z0-9._-]{3,32}$/;
 
-/* -------------------------
-   MAIN VALIDATOR
-------------------------- */
-export function validateInput(type, value) {
-  if (!value || !value.trim()) {
+/* --------------------------------------------------------------------------
+   VALIDATOR MAP
+-------------------------------------------------------------------------- */
+const validators = {
+  ip: {
+    test: value => IPV4_REGEX.test(value),
+    error: "Invalid IPv4 address"
+  },
+
+  domain: {
+    test: value => DOMAIN_REGEX.test(value),
+    error: "Invalid domain format"
+  },
+
+  email: {
+    test: value => EMAIL_REGEX.test(value),
+    error: "Invalid email address"
+  },
+
+  username: {
+    test: value => USERNAME_REGEX.test(value),
+    error: "Invalid username format"
+  }
+};
+
+/* --------------------------------------------------------------------------
+   MAIN VALIDATION FUNCTION
+-------------------------------------------------------------------------- */
+export function validateInput(type, rawValue) {
+  if (typeof rawValue !== "string") {
+    return {
+      valid: false,
+      reason: "Input must be a string"
+    };
+  }
+
+  const value = rawValue.trim();
+
+  if (!value) {
     return {
       valid: false,
       reason: "Input is empty"
     };
   }
 
-  const input = value.trim();
+  const validator = validators[type];
 
-  switch (type) {
-    case "ip":
-      return ipRegex.test(input)
-        ? { valid: true }
-        : { valid: false, reason: "Invalid IPv4 address" };
-
-    case "domain":
-      return domainRegex.test(input)
-        ? { valid: true }
-        : { valid: false, reason: "Invalid domain format" };
-
-    case "email":
-      return emailRegex.test(input)
-        ? { valid: true }
-        : { valid: false, reason: "Invalid email address" };
-
-    case "username":
-      return usernameRegex.test(input)
-        ? { valid: true }
-        : { valid: false, reason: "Invalid username format" };
-
-    default:
-      return {
-        valid: false,
-        reason: "Unknown target type"
-      };
+  if (!validator) {
+    return {
+      valid: false,
+      reason: "Unknown target type"
+    };
   }
+
+  if (!validator.test(value)) {
+    return {
+      valid: false,
+      reason: validator.error
+    };
+  }
+
+  return {
+    valid: true,
+    value
+  };
 }
