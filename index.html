@@ -12,13 +12,13 @@
       height: 100%;
       background: #0b0d10;
       overflow: hidden;
+      cursor: none; /* hide system cursor */
     }
 
     canvas {
       position: fixed;
       inset: 0;
       display: block;
-      cursor: crosshair;
     }
   </style>
 </head>
@@ -38,23 +38,42 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 
+/* ---------------- Cursor ---------------- */
+
 const mouse = {
   x: null,
   y: null,
+  tx: null,
+  ty: null,
   down: false
 };
 
 window.addEventListener("mousemove", e => {
-  mouse.x = e.clientX;
-  mouse.y = e.clientY;
+  mouse.tx = e.clientX;
+  mouse.ty = e.clientY;
+
+  if (mouse.x === null) {
+    mouse.x = mouse.tx;
+    mouse.y = mouse.ty;
+  }
 });
 
 window.addEventListener("mousedown", () => mouse.down = true);
 window.addEventListener("mouseup", () => mouse.down = false);
 window.addEventListener("mouseleave", () => {
-  mouse.x = mouse.y = null;
+  mouse.x = mouse.y = mouse.tx = mouse.ty = null;
   mouse.down = false;
 });
+
+/* smooth cursor follow */
+function updateCursor() {
+  if (mouse.tx !== null) {
+    mouse.x += (mouse.tx - mouse.x) * 0.25;
+    mouse.y += (mouse.ty - mouse.y) * 0.25;
+  }
+}
+
+/* ---------------- Network ---------------- */
 
 const NODE_COUNT = 140;
 const BASE_DISTANCE = 130;
@@ -75,7 +94,6 @@ class Node {
     this.x += this.vx;
     this.y += this.vy;
 
-    // screen bounds
     if (this.x < 0 || this.x > w) this.vx *= -1;
     if (this.y < 0 || this.y > h) this.vy *= -1;
 
@@ -85,13 +103,12 @@ class Node {
       const dist = Math.hypot(dx, dy);
 
       if (dist < GRAB_RADIUS) {
-        const force = mouse.down ? 0.018 : 0.006;
-        this.vx += dx * force / dist;
-        this.vy += dy * force / dist;
+        const force = mouse.down ? 0.02 : 0.007;
+        this.vx += (dx / dist) * force;
+        this.vy += (dy / dist) * force;
       }
     }
 
-    // friction
     this.vx *= 0.98;
     this.vy *= 0.98;
   }
@@ -116,13 +133,12 @@ function drawConnections() {
       if (mouse.x !== null) {
         const mx = (nodes[i].x + nodes[j].x) / 2 - mouse.x;
         const my = (nodes[i].y + nodes[j].y) / 2 - mouse.y;
-        const md = Math.hypot(mx, my);
-        if (md < GRAB_RADIUS) maxDist += 60;
+        if (Math.hypot(mx, my) < GRAB_RADIUS) maxDist += 60;
       }
 
       if (dist < maxDist) {
-        const alpha = 1 - dist / maxDist;
-        ctx.strokeStyle = `rgba(255,255,255,${alpha * 0.35})`;
+        const a = 1 - dist / maxDist;
+        ctx.strokeStyle = `rgba(255,255,255,${a * 0.35})`;
         ctx.lineWidth = 0.6;
         ctx.beginPath();
         ctx.moveTo(nodes[i].x, nodes[i].y);
@@ -133,8 +149,27 @@ function drawConnections() {
   }
 }
 
+/* ---------------- Cursor Draw ---------------- */
+
+function drawCursor() {
+  if (mouse.x === null) return;
+
+  ctx.beginPath();
+  ctx.arc(mouse.x, mouse.y, 5, 0, Math.PI * 2);
+  ctx.fillStyle = "#ffffff";
+  ctx.fill();
+
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "#000000";
+  ctx.stroke();
+}
+
+/* ---------------- Animate ---------------- */
+
 function animate() {
   ctx.clearRect(0, 0, w, h);
+
+  updateCursor();
 
   nodes.forEach(n => {
     n.update();
@@ -142,10 +177,12 @@ function animate() {
   });
 
   drawConnections();
+  drawCursor();
+
   requestAnimationFrame(animate);
 }
 
-// init
+/* init */
 for (let i = 0; i < NODE_COUNT; i++) {
   nodes.push(new Node());
 }
