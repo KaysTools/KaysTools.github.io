@@ -1,143 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>OSINT Interface</title>
-<style>
-html, body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    background: black;
-    overflow: hidden;
-    font-family: monospace;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT Eye</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(to bottom, #0f001f, #1a0033);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: white;
+            overflow: hidden;
+        }
 
-#container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
+        /* Smaller eye, positioned higher */
+        .eye-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin-top: 60px;
+        }
 
-#eye-wrapper {
-    position: absolute;
-    top: 12%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 30vmin;
-}
+        .eyeball {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4),
+                        inset 0 0 50px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
 
-svg {
-    width: 100%;
-}
+        .iris {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background: radial-gradient(circle, #a82828, #742424);
+            border-radius: 50%;
+            top: 45px;
+            left: 45px;
+            transition: transform 0.1s ease-out;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
 
-#console {
-    position: absolute;
-    top: 55%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    padding: 16px;
-    border: 2px solid #ff2b2b;
-    color: #ff2b2b;
-    background: rgba(0,0,0,0.85);
-    box-shadow: 0 0 15px rgba(255,0,0,0.4);
-    font-size: 14px;
-}
+        .pupil {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            background: black;
+            border-radius: 50%;
+            top: 27px;
+            left: 27px;
+            box-shadow: 0 0 12px rgba(116, 36, 36, 0.8);
+        }
 
-#console::before {
-    content: "OSINT QUERY TERMINAL";
-    display: block;
-    margin-bottom: 8px;
-    opacity: 0.8;
-}
-</style>
+        .glare {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            top: 12px;
+            left: 12px;
+            opacity: 0.7;
+        }
+
+        /* Bottom search section */
+        .search-section {
+            width: 90%;
+            max-width: 800px;
+            margin-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .selector button {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .selector button.active, .selector button:hover {
+            background: rgba(255, 50, 50, 0.3);
+            border-color: #ff3333;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+        }
+
+        select, input {
+            flex: 1;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            color: white;
+            font-size: 16px;
+        }
+
+        select {
+            min-width: 180px;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        button.search-btn {
+            padding: 15px 30px;
+            background: #800020;
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 0, 50, 0.4);
+            transition: all 0.3s;
+        }
+
+        button.search-btn:hover {
+            background: #a00030;
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
 
-<div id="container">
+    <!-- Eye (smaller and higher up) -->
+    <div class="eye-container" id="eyeContainer">
+        <div class="eyeball">
+            <div class="iris" id="iris">
+                <div class="pupil">
+                    <div class="glare"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div id="eye-wrapper">
-<svg id="eyeSVG" viewBox="0 0 600 300">
-<defs>
-    <filter id="bloom" x="-100%" y="-100%" width="300%" height="300%">
-        <feGaussianBlur stdDeviation="8" result="b1"/>
-        <feGaussianBlur stdDeviation="20" result="b2"/>
-        <feMerge>
-            <feMergeNode in="b2"/>
-            <feMergeNode in="b1"/>
-            <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-    </filter>
+    <!-- Bottom search section in red/dark theme -->
+    <div class="search-section">
+        <div class="selector">
+            <button class="active">Discord ID</button>
+            <button>Username</button>
+            <button>IP Lookup</button>
+            <button>Website</button>
+            <button>User on Site</button>
+        </div>
 
-    <filter id="fog">
-        <feGaussianBlur stdDeviation="25"/>
-    </filter>
-</defs>
+        <div class="search-bar">
+            <select id="searchType">
+                <option value="discord-id">Discord ID</option>
+                <option value="username">Username</option>
+                <option value="ip">IP Lookup</option>
+                <option value="website">Website</option>
+                <option value="site-user">User on Site (e.g. site.com/user)</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="Enter value here...">
+            <button class="search-btn">Search →</button>
+        </div>
+    </div>
 
-<g filter="url(#bloom)">
-    <path d="M60 150 Q300 70 540 150"
-          fill="none" stroke="white"
-          stroke-width="10"
-          stroke-linecap="round"/>
-    <path d="M60 150 Q300 230 540 150"
-          fill="none" stroke="white"
-          stroke-width="10"
-          stroke-linecap="round"/>
-</g>
+    <script>
+        // Eye follows cursor
+        const eyeContainer = document.getElementById('eyeContainer');
+        const iris = document.getElementById('iris');
 
-<circle cx="300" cy="150" r="70"
-        fill="white" opacity="0.18"
-        filter="url(#fog)"/>
+        document.addEventListener('mousemove', (e) => {
+            const rect = eyeContainer.getBoundingClientRect();
+            const eyeX = rect.left + rect.width / 2;
+            const eyeY = rect.top + rect.height / 2;
 
-<path d="M285 185
-         Q260 215 280 245
-         Q300 270 295 295"
-      fill="none"
-      stroke="white"
-      stroke-width="6"
-      filter="url(#bloom)"
-      stroke-linecap="round"/>
+            const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
+            const distance = Math.min(27, Math.hypot(e.clientX - eyeX, e.clientY - eyeY) / 10);
 
-<circle id="pupil" cx="300" cy="150" r="14"
-        fill="white"
-        filter="url(#bloom)"/>
-</svg>
-</div>
+            const offsetX = Math.cos(angle) * distance;
+            const offsetY = Math.sin(angle) * distance;
 
-<div id="console">
-> Awaiting target input...<br>
-> Passive data collection enabled.<br>
-> No active trace detected.
-</div>
+            iris.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        });
 
-</div>
+        // Optional: Sync placeholder with selected type
+        const searchType = document.getElementById('searchType');
+        const searchInput = document.getElementById('searchInput');
 
-<script>
-const pupil = document.getElementById("pupil");
-const svg = document.getElementById("eyeSVG");
+        const placeholders = {
+            'discord-id': 'e.g. 123456789012345678',
+            'username': 'e.g. winterfox',
+            'ip': 'e.g. 192.168.1.1',
+            'website': 'e.g. example.com',
+            'site-user': 'e.g. reddit.com/u/username'
+        };
 
-const center = { x: 300, y: 150 };
-const maxOffset = 22;
-
-document.addEventListener("mousemove", e => {
-    const rect = svg.getBoundingClientRect();
-    const mx = (e.clientX - rect.left) * (600 / rect.width);
-    const my = (e.clientY - rect.top) * (300 / rect.height);
-
-    let dx = mx - center.x;
-    let dy = my - center.y;
-
-    const dist = Math.hypot(dx, dy);
-    if (dist > maxOffset) {
-        dx = dx / dist * maxOffset;
-        dy = dy / dist * maxOffset;
-    }
-
-    pupil.setAttribute("cx", center.x + dx);
-    pupil.setAttribute("cy", center.y + dy);
-});
-</script>
-
+        searchType.addEventListener('change', () => {
+            searchInput.placeholder = placeholders[searchType.value] || 'Enter value here...';
+        });
+    </script>
 </body>
 </html>
