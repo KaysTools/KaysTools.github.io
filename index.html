@@ -1,137 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Eye</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
+<meta charset="UTF-8" />
+<title>Glowing Eye Follow</title>
+<style>
     html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #000;
-      overflow: hidden;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        cursor: none;
     }
-    canvas {
-      display: block;
+
+    svg {
+        width: 60vmin;
+        height: auto;
+        filter: drop-shadow(0 0 12px white)
+                drop-shadow(0 0 30px white);
     }
-  </style>
+
+    .glow {
+        stroke: white;
+        stroke-width: 6;
+        fill: none;
+        stroke-linecap: round;
+    }
+
+    .iris {
+        stroke: white;
+        stroke-width: 4;
+        fill: none;
+    }
+
+    .pupil {
+        fill: white;
+        filter: drop-shadow(0 0 12px white)
+                drop-shadow(0 0 25px white);
+    }
+</style>
 </head>
 <body>
 
-<canvas id="c"></canvas>
+<svg id="eye" viewBox="0 0 300 150">
+    <!-- Upper eyelid -->
+    <path class="glow" d="M30 75 Q150 10 270 75" />
+
+    <!-- Lower eyelid -->
+    <path class="glow" d="M30 75 Q150 140 270 75" />
+
+    <!-- Iris -->
+    <circle class="iris" cx="150" cy="75" r="35" />
+
+    <!-- Pupil -->
+    <circle id="pupil" class="pupil" cx="150" cy="75" r="10"/>
+
+    <!-- Tear symbol -->
+    <path class="glow" d="M120 95 Q110 115 130 125 Q150 135 145 150" stroke-width="3"/>
+</svg>
 
 <script>
-const canvas = document.getElementById("c");
-const ctx = canvas.getContext("2d");
+const pupil = document.getElementById("pupil");
+const eye = document.getElementById("eye");
 
-let w, h;
-function resize() {
-  w = canvas.width = window.innerWidth;
-  h = canvas.height = window.innerHeight;
-}
-window.addEventListener("resize", resize);
-resize();
+const eyeCenter = { x: 150, y: 75 };
+const maxOffset = 12;
 
-/* mouse */
-const mouse = { x: w / 2, y: h / 2 };
-window.addEventListener("mousemove", e => {
-  mouse.x = e.clientX;
-  mouse.y = e.clientY;
+document.addEventListener("mousemove", (e) => {
+    const rect = eye.getBoundingClientRect();
+
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const scaleX = 300 / rect.width;
+    const scaleY = 150 / rect.height;
+
+    const svgX = mouseX * scaleX;
+    const svgY = mouseY * scaleY;
+
+    let dx = svgX - eyeCenter.x;
+    let dy = svgY - eyeCenter.y;
+
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance > maxOffset) {
+        dx = (dx / distance) * maxOffset;
+        dy = (dy / distance) * maxOffset;
+    }
+
+    pupil.setAttribute("cx", eyeCenter.x + dx);
+    pupil.setAttribute("cy", eyeCenter.y + dy);
 });
-
-function drawEye() {
-  ctx.clearRect(0, 0, w, h);
-
-  const cx = w / 2;
-  const cy = h / 2;
-
-  const eyeW = 440;
-  const eyeH = 85;
-  const circleR = 115;
-  const orbR = 42;
-
-  ctx.strokeStyle = "#fff";
-  ctx.fillStyle = "#fff";
-
-  /* === long, flat upper line === */
-  ctx.save();
-  ctx.lineWidth = 3;
-  ctx.shadowBlur = 24;
-  ctx.shadowColor = "rgba(255,255,255,0.8)";
-  ctx.beginPath();
-  ctx.moveTo(cx - eyeW / 2 - 20, cy - circleR - 18);
-  ctx.quadraticCurveTo(
-    cx,
-    cy - circleR - 30,
-    cx + eyeW / 2 + 20,
-    cy - circleR - 18
-  );
-  ctx.stroke();
-  ctx.restore();
-
-  /* === central circle === */
-  ctx.save();
-  ctx.lineWidth = 4;
-  ctx.shadowBlur = 30;
-  ctx.shadowColor = "rgba(255,255,255,0.9)";
-  ctx.beginPath();
-  ctx.arc(cx, cy, circleR, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.restore();
-
-  /* === eye almond (intersecting circle) === */
-  ctx.save();
-  ctx.lineWidth = 4;
-  ctx.shadowBlur = 30;
-  ctx.shadowColor = "rgba(255,255,255,0.9)";
-  ctx.beginPath();
-  ctx.moveTo(cx - eyeW / 2, cy);
-  ctx.quadraticCurveTo(cx, cy - eyeH, cx + eyeW / 2, cy);
-  ctx.quadraticCurveTo(cx, cy + eyeH, cx - eyeW / 2, cy);
-  ctx.stroke();
-  ctx.restore();
-
-  /* === subtle orb tracking === */
-  const dx = mouse.x - cx;
-  const dy = mouse.y - cy;
-  const d = Math.hypot(dx, dy);
-  const maxOffset = 12;
-
-  const px = cx + (dx / (d || 1)) * Math.min(d, maxOffset);
-  const py = cy + (dy / (d || 1)) * Math.min(d, maxOffset);
-
-  /* === MASSIVE inner orb === */
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(px, py, orbR, 0, Math.PI * 2);
-  ctx.shadowBlur = 40;
-  ctx.shadowColor = "rgba(255,255,255,1)";
-  ctx.fill();
-  ctx.restore();
-
-  /* === minimal tear === */
-  ctx.save();
-  ctx.lineWidth = 3;
-  ctx.shadowBlur = 22;
-  ctx.shadowColor = "rgba(255,255,255,0.8)";
-  ctx.beginPath();
-  ctx.moveTo(cx + 2, cy + circleR - 5);
-  ctx.quadraticCurveTo(
-    cx + 6,
-    cy + circleR + 60,
-    cx + 2,
-    cy + circleR + 110
-  );
-  ctx.stroke();
-  ctx.restore();
-}
-
-function animate() {
-  drawEye();
-  requestAnimationFrame(animate);
-}
-animate();
 </script>
 
 </body>
