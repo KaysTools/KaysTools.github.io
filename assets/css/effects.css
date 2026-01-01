@@ -1,10 +1,18 @@
-/* ======================================================
+/* ==========================================================================
    EFFECTS.CSS
-   Visual polish, glow, transitions, OSINT aesthetic
-====================================================== */
+   Visual polish, motion, glow, and atmospheric styling
+   ========================================================================== */
 
-/* Smooth global transitions */
-* {
+/* --------------------------------------------------------------------------
+   CONTROLLED TRANSITIONS
+   (Avoid global * transitions — performance safe)
+-------------------------------------------------------------------------- */
+a,
+button,
+.input,
+.picker-toggle,
+.picker-item,
+.module {
   transition:
     background-color 0.2s ease,
     color 0.2s ease,
@@ -13,35 +21,50 @@
     border-color 0.2s ease;
 }
 
-/* Soft ambient glow behind hero */
+/* --------------------------------------------------------------------------
+   HERO AMBIENT GLOW
+-------------------------------------------------------------------------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
 .hero::before {
   content: "";
   position: absolute;
   inset: -200px;
-  background:
-    radial-gradient(circle at center,
-      rgba(133, 0, 0, 0.08),
-      transparent 60%);
-  pointer-events: none;
   z-index: -1;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(133, 0, 0, 0.08),
+      transparent 60%
+    );
 }
 
-/* Button hover enhancement */
+/* --------------------------------------------------------------------------
+   BUTTON HOVER ENHANCEMENT
+-------------------------------------------------------------------------- */
 .btn-search:hover {
   box-shadow:
     0 0 40px rgba(133, 0, 0, 0.6),
-    inset 0 0 0 1px rgba(255,255,255,0.1);
-  transform: translateY(-1px);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-/* Module hover depth */
+/* --------------------------------------------------------------------------
+   MODULE DEPTH EFFECT
+-------------------------------------------------------------------------- */
 .module:hover {
   box-shadow:
     0 0 45px rgba(133, 0, 0, 0.35),
-    inset 0 0 0 1px rgba(255,255,255,0.08);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-/* Picker dropdown animation */
+/* --------------------------------------------------------------------------
+   PICKER DROPDOWN ANIMATION
+-------------------------------------------------------------------------- */
 .picker-menu {
   transform-origin: top;
   animation: pickerFade 0.15s ease;
@@ -52,25 +75,39 @@
     opacity: 0;
     transform: translateY(-6px) scale(0.98);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
 
-/* Subtle scanline texture */
+/* --------------------------------------------------------------------------
+   SCANLINE OVERLAY (OSINT AESTHETIC)
+-------------------------------------------------------------------------- */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+
   background:
     repeating-linear-gradient(
       to bottom,
-      rgba(255,255,255,0.015),
-      rgba(255,255,255,0.015) 1px,
+      rgba(255, 255, 255, 0.015),
+      rgba(255, 255, 255, 0.015) 1px,
       transparent 1px,
       transparent 3px
     );
-  pointer-events: none;
-  z-index: 9999;
+}
+
+/* --------------------------------------------------------------------------
+   REDUCED MOTION SUPPORT
+-------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
