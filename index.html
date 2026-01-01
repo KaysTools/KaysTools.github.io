@@ -46,14 +46,41 @@ function drawEye() {
   const cx = w / 2;
   const cy = h / 2;
 
-  const eyeW = 420;
-  const eyeH = 95;
-  const circleR = 92;
+  const eyeW = 440;
+  const eyeH = 85;
+  const circleR = 115;
+  const orbR = 42;
 
   ctx.strokeStyle = "#fff";
   ctx.fillStyle = "#fff";
 
-  /* === main almond === */
+  /* === long, flat upper line === */
+  ctx.save();
+  ctx.lineWidth = 3;
+  ctx.shadowBlur = 24;
+  ctx.shadowColor = "rgba(255,255,255,0.8)";
+  ctx.beginPath();
+  ctx.moveTo(cx - eyeW / 2 - 20, cy - circleR - 18);
+  ctx.quadraticCurveTo(
+    cx,
+    cy - circleR - 30,
+    cx + eyeW / 2 + 20,
+    cy - circleR - 18
+  );
+  ctx.stroke();
+  ctx.restore();
+
+  /* === central circle === */
+  ctx.save();
+  ctx.lineWidth = 4;
+  ctx.shadowBlur = 30;
+  ctx.shadowColor = "rgba(255,255,255,0.9)";
+  ctx.beginPath();
+  ctx.arc(cx, cy, circleR, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+
+  /* === eye almond (intersecting circle) === */
   ctx.save();
   ctx.lineWidth = 4;
   ctx.shadowBlur = 30;
@@ -65,62 +92,36 @@ function drawEye() {
   ctx.stroke();
   ctx.restore();
 
-  /* === upper lid (close, hugging) === */
-  ctx.save();
-  ctx.lineWidth = 3;
-  ctx.shadowBlur = 24;
-  ctx.shadowColor = "rgba(255,255,255,0.75)";
-  ctx.beginPath();
-  ctx.moveTo(cx - eyeW / 2 + 30, cy - eyeH + 12);
-  ctx.quadraticCurveTo(
-    cx,
-    cy - eyeH - 8,
-    cx + eyeW / 2 - 30,
-    cy - eyeH + 12
-  );
-  ctx.stroke();
-  ctx.restore();
-
-  /* === central circle (intersecting) === */
-  ctx.save();
-  ctx.lineWidth = 4;
-  ctx.shadowBlur = 28;
-  ctx.shadowColor = "rgba(255,255,255,0.9)";
-  ctx.beginPath();
-  ctx.arc(cx, cy, circleR, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.restore();
-
-  /* === subtle pupil offset === */
+  /* === subtle orb tracking === */
   const dx = mouse.x - cx;
   const dy = mouse.y - cy;
   const d = Math.hypot(dx, dy);
-  const offset = 14;
+  const maxOffset = 12;
 
-  const px = cx + (dx / (d || 1)) * Math.min(d, offset);
-  const py = cy + (dy / (d || 1)) * Math.min(d, offset);
+  const px = cx + (dx / (d || 1)) * Math.min(d, maxOffset);
+  const py = cy + (dy / (d || 1)) * Math.min(d, maxOffset);
 
-  /* === LARGE inner orb === */
+  /* === MASSIVE inner orb === */
   ctx.save();
   ctx.beginPath();
-  ctx.arc(px, py, 34, 0, Math.PI * 2);
-  ctx.shadowBlur = 35;
+  ctx.arc(px, py, orbR, 0, Math.PI * 2);
+  ctx.shadowBlur = 40;
   ctx.shadowColor = "rgba(255,255,255,1)";
   ctx.fill();
   ctx.restore();
 
-  /* === simple tear stroke === */
+  /* === minimal tear === */
   ctx.save();
   ctx.lineWidth = 3;
-  ctx.shadowBlur = 24;
+  ctx.shadowBlur = 22;
   ctx.shadowColor = "rgba(255,255,255,0.8)";
   ctx.beginPath();
-  ctx.moveTo(cx + 6, cy + circleR - 4);
+  ctx.moveTo(cx + 2, cy + circleR - 5);
   ctx.quadraticCurveTo(
-    cx + 14,
-    cy + circleR + 55,
+    cx + 6,
+    cy + circleR + 60,
     cx + 2,
-    cy + circleR + 95
+    cy + circleR + 110
   );
   ctx.stroke();
   ctx.restore();
