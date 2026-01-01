@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Observer</title>
+  <title>Eye</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
@@ -10,16 +10,12 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      background: #000000;
+      background: #000;
       overflow: hidden;
-      cursor: default;
     }
 
     canvas {
-      position: fixed;
-      inset: 0;
       display: block;
-      background: #000000;
     }
   </style>
 </head>
@@ -40,135 +36,89 @@ window.addEventListener("resize", resize);
 resize();
 
 /* ---------- Mouse ---------- */
-
 const mouse = { x: w / 2, y: h / 2 };
 window.addEventListener("mousemove", e => {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
 });
 
-/* ---------- Network ---------- */
-
-const NODE_COUNT = 120;
-const LINK_DISTANCE = 150;
-const nodes = [];
-
-class Node {
-  constructor() {
-    this.x = Math.random() * w;
-    this.y = Math.random() * h;
-    this.vx = (Math.random() - 0.5) * 1.1;
-    this.vy = (Math.random() - 0.5) * 1.1;
-    this.r = 1.2;
-  }
-
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
-
-    if (this.x < 0 || this.x > w) this.vx *= -1;
-    if (this.y < 0 || this.y > h) this.vy *= -1;
-  }
-
-  draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    ctx.fillStyle = "#ffffff";
-    ctx.fill();
-  }
-}
-
-function drawConnections() {
-  ctx.save();
-  ctx.lineWidth = 0.5;
-  ctx.shadowBlur = 6;
-  ctx.shadowColor = "rgba(255,255,255,0.25)";
-
-  for (let i = 0; i < nodes.length; i++) {
-    for (let j = i + 1; j < nodes.length; j++) {
-      const dx = nodes[i].x - nodes[j].x;
-      const dy = nodes[i].y - nodes[j].y;
-      const d = Math.hypot(dx, dy);
-
-      if (d < LINK_DISTANCE) {
-        const a = 1 - d / LINK_DISTANCE;
-        ctx.strokeStyle = `rgba(255,255,255,${a * 0.25})`;
-        ctx.beginPath();
-        ctx.moveTo(nodes[i].x, nodes[i].y);
-        ctx.lineTo(nodes[j].x, nodes[j].y);
-        ctx.stroke();
-      }
-    }
-  }
-
-  ctx.restore();
-}
-
 /* ---------- Eye ---------- */
-
 function drawEye() {
   const cx = w / 2;
   const cy = h / 2;
 
-  const eyeRX = 190;
-  const eyeRY = 95;
+  const eyeW = 360;
+  const eyeH = 160;
 
-  /* sclera (white of eye) */
+  ctx.clearRect(0, 0, w, h);
+
+  /* --- outer eye outline --- */
+  ctx.save();
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = 4;
+  ctx.shadowBlur = 40;
+  ctx.shadowColor = "rgba(255,255,255,0.9)";
+
+  ctx.beginPath();
+  ctx.moveTo(cx - eyeW / 2, cy);
+  ctx.quadraticCurveTo(cx, cy - eyeH / 2, cx + eyeW / 2, cy);
+  ctx.quadraticCurveTo(cx, cy + eyeH / 2, cx - eyeW / 2, cy);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.restore();
+
+  /* --- inner iris ring --- */
   ctx.save();
   ctx.beginPath();
-  ctx.ellipse(cx, cy, eyeRX, eyeRY, 0, 0, Math.PI * 2);
+  ctx.arc(cx, cy, 55, 0, Math.PI * 2);
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = 3;
+  ctx.shadowBlur = 25;
+  ctx.shadowColor = "rgba(255,255,255,0.7)";
+  ctx.stroke();
+  ctx.restore();
+
+  /* --- pupil tracking --- */
+  const dx = mouse.x - cx;
+  const dy = mouse.y - cy;
+  const dist = Math.hypot(dx, dy);
+  const maxOffset = 20;
+
+  const px = cx + (dx / dist) * Math.min(dist, maxOffset);
+  const py = cy + (dy / dist) * Math.min(dist, maxOffset);
+
+  /* --- glowing pupil --- */
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(px, py, 16, 0, Math.PI * 2);
   ctx.fillStyle = "#ffffff";
-  ctx.shadowBlur = 40;
-  ctx.shadowColor = "rgba(255,255,255,0.85)";
+  ctx.shadowBlur = 30;
+  ctx.shadowColor = "rgba(255,255,255,1)";
   ctx.fill();
   ctx.restore();
 
-  /* pupil tracking */
-  const dx = mouse.x - cx;
-  const dy = mouse.y - cy;
-  const angle = Math.atan2(dy, dx);
-
-  const maxOffsetX = eyeRX * 0.28;
-  const maxOffsetY = eyeRY * 0.28;
-
-  const px = cx + Math.cos(angle) * maxOffsetX;
-  const py = cy + Math.sin(angle) * maxOffsetY;
-
-  /* pupil */
+  /* --- tear / flourish (inspired curve) --- */
   ctx.save();
-  ctx.beginPath();
-  ctx.arc(px, py, 22, 0, Math.PI * 2);
-  ctx.fillStyle = "#000000";
-  ctx.fill();
-
-  /* subtle neon rim */
-  ctx.lineWidth = 2;
-  ctx.shadowBlur = 25;
-  ctx.shadowColor = "rgba(255,255,255,0.8)";
   ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = 3;
+  ctx.shadowBlur = 30;
+  ctx.shadowColor = "rgba(255,255,255,0.8)";
+
+  ctx.beginPath();
+  ctx.moveTo(cx - 10, cy + 40);
+  ctx.bezierCurveTo(
+    cx - 50, cy + 90,
+    cx + 10, cy + 120,
+    cx + 25, cy + 70
+  );
   ctx.stroke();
   ctx.restore();
 }
 
 /* ---------- Animate ---------- */
-
 function animate() {
-  ctx.clearRect(0, 0, w, h);
-
-  nodes.forEach(n => {
-    n.update();
-    n.draw();
-  });
-
-  drawConnections();
   drawEye();
-
   requestAnimationFrame(animate);
-}
-
-/* init */
-for (let i = 0; i < NODE_COUNT; i++) {
-  nodes.push(new Node());
 }
 animate();
 </script>
