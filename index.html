@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iSpy</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -15,76 +15,107 @@
             align-items: center;
             justify-content: flex-start;
             font-family: 'Inter', sans-serif;
-            color: #e0e0e0;
+            color: #ffffff;
             overflow: hidden;
             position: relative;
         }
 
-        /* Subtle dark red particles + faint glows */
+        /* Deep void with intense dark red atmosphere */
         body::before {
             content: '';
             position: absolute;
             inset: 0;
             background: 
-                radial-gradient(circle at 30% 70%, rgba(120, 0, 0, 0.12) 0%, transparent 25%),
-                radial-gradient(circle at 70% 30%, rgba(140, 0, 0, 0.1) 0%, transparent 30%),
-                radial-gradient(circle at 50% 50%, rgba(100, 0, 0, 0.08) 0%, transparent 35%);
+                radial-gradient(circle at 20% 80%, rgba(180, 10, 30, 0.18) 0%, transparent 30%),
+                radial-gradient(circle at 80% 20%, rgba(200, 20, 40, 0.15) 0%, transparent 35%),
+                radial-gradient(circle at 50% 50%, rgba(150, 0, 20, 0.12) 0%, transparent 40%);
             pointer-events: none;
             z-index: 1;
+            animation: breathe 20s ease-in-out infinite alternate;
         }
 
         body::after {
             content: '';
             position: absolute;
             inset: 0;
-            background-image: radial-gradient(circle, rgba(180, 20, 40, 0.4) 1px, transparent 1px);
-            background-size: 80px 80px;
-            background-position: 0 0, 40px 40px;
-            opacity: 0.06;
-            animation: drift 60s linear infinite;
+            background-image: 
+                radial-gradient(circle, rgba(220, 30, 50, 0.5) 1px, transparent 1px),
+                radial-gradient(circle, rgba(180, 20, 40, 0.3) 1px, transparent 1px);
+            background-size: 70px 70px, 100px 100px;
+            background-position: 0 0, 35px 35px;
+            opacity: 0.08;
+            animation: drift 50s linear infinite;
             pointer-events: none;
             z-index: 1;
         }
 
-        @keyframes drift {
-            0% { background-position: 0 0, 40px 40px; }
-            100% { background-position: 80px 80px, 120px 120px; }
+        @keyframes breathe {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
         }
 
-        /* Title section */
+        @keyframes drift {
+            0% { background-position: 0 0, 35px 35px; }
+            100% { background-position: 70px 70px, 135px 135px; }
+        }
+
+        .central-glow {
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(200, 20, 40, 0.25) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 1;
+            animation: pulse-glow 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
+            100% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.6; }
+        }
+
+        /* Header */
         .header {
             text-align: center;
-            margin-top: 80px;
+            margin-top: 90px;
             z-index: 2;
             position: relative;
         }
 
         h1 {
-            font-size: 4.2rem;
-            font-weight: 700;
+            font-size: 5.5rem;
+            font-weight: 800;
             color: #ffffff;
             margin: 0;
-            letter-spacing: 2px;
+            letter-spacing: 8px;
+            text-shadow: 
+                0 0 40px rgba(220, 40, 60, 0.8),
+                0 0 80px rgba(180, 20, 40, 0.5);
         }
 
         .subtitle {
-            font-size: 1.3rem;
-            color: #b0b0b0;
-            margin: 16px 0 8px;
-            max-width: 800px;
+            font-size: 1.5rem;
+            color: #d0d0d0;
+            margin: 20px 0 10px;
+            max-width: 900px;
+            font-weight: 500;
         }
 
         .trust {
-            font-size: 1rem;
-            color: #888888;
+            font-size: 1.1rem;
+            color: #909090;
             margin-top: 0;
+            font-weight: 400;
         }
 
-        /* Curved glowing lines behind the eye */
+        /* Flowing red lines */
         .lines {
             position: absolute;
-            width: 800px;
-            height: 400px;
+            width: 1000px;
+            height: 500px;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -95,40 +126,41 @@
         .line {
             position: absolute;
             width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(200, 30, 50, 0.6), transparent);
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #e04050, transparent);
             border-radius: 50%;
-            box-shadow: 0 0 20px rgba(200, 30, 50, 0.8);
-            animation: glow 8s ease-in-out infinite alternate;
+            box-shadow: 0 0 30px #e04050, 0 0 60px rgba(220, 60, 80, 0.6);
+            animation: flow 10s ease-in-out infinite alternate;
         }
 
         .line:nth-child(1) {
-            top: 100px;
-            transform: rotate(-15deg) scaleX(1.2);
+            top: 120px;
+            transform: rotate(-18deg) scaleX(1.3);
         }
 
         .line:nth-child(2) {
-            top: 180px;
-            transform: rotate(15deg) scaleX(1.2);
+            top: 200px;
+            transform: rotate(18deg) scaleX(1.3);
         }
 
-        @keyframes glow {
-            0% { opacity: 0.4; }
-            100% { opacity: 0.8; }
+        @keyframes flow {
+            0% { opacity: 0.5; transform: translateX(-20px) rotate(var(--rot, 0deg)) scaleX(1.3); }
+            100% { opacity: 0.9; transform: translateX(20px) rotate(var(--rot, 0deg)) scaleX(1.3); }
         }
 
-        /* Eye container */
+        /* Eye */
         .eye-wrapper {
             position: relative;
             z-index: 2;
-            margin: 60px 0 40px;
+            margin: 70px 0 50px;
         }
 
         .eye-container {
             position: relative;
-            width: 280px;
-            height: 280px;
+            width: 300px;
+            height: 300px;
             margin: 0 auto;
+            filter: drop-shadow(0 0 60px rgba(220, 40, 60, 0.7));
         }
 
         .eyeball {
@@ -136,177 +168,199 @@
             height: 100%;
             background: white;
             border-radius: 50%;
-            box-shadow: 0 0 60px rgba(255, 255, 255, 0.6),
-                        inset 0 0 80px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 80px rgba(255, 255, 255, 0.7),
+                        inset 0 0 100px rgba(0, 0, 0, 0.4);
             position: relative;
             overflow: hidden;
         }
 
         .iris {
             position: absolute;
-            width: 140px;
-            height: 140px;
-            background: radial-gradient(circle, #b82828, #842424);
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #e02828, #a01818);
             border-radius: 50%;
-            top: 70px;
-            left: 70px;
-            transition: transform 0.1s ease-out;
-            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7);
+            top: 75px;
+            left: 75px;
+            transition: transform 0.08s ease-out;
+            box-shadow: 
+                inset 0 0 50px rgba(0, 0, 0, 0.8),
+                0 0 40px rgba(220, 40, 60, 0.9);
         }
 
         .pupil {
             position: absolute;
-            width: 56px;
-            height: 56px;
+            width: 60px;
+            height: 60px;
             background: black;
             border-radius: 50%;
-            top: 42px;
-            left: 42px;
-            box-shadow: 0 0 25px rgba(150, 36, 36, 1);
+            top: 45px;
+            left: 45px;
+            box-shadow: 0 0 30px rgba(200, 40, 60, 1);
         }
 
         .glare {
             position: absolute;
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             background: white;
             border-radius: 50%;
-            top: 18px;
-            left: 18px;
-            opacity: 0.8;
+            top: 20px;
+            left: 20px;
+            opacity: 0.9;
         }
 
-        /* Search container - glassmorphism with red-purple tint */
+        /* Search panel */
         .search-container {
-            width: 90%;
-            max-width: 1100px;
+            width: 92%;
+            max-width: 1200px;
             margin-bottom: 80px;
             z-index: 2;
-            background: rgba(25, 8, 15, 0.4);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-radius: 28px;
-            border: 1px solid rgba(180, 30, 50, 0.3);
-            padding: 48px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7),
-                        inset 0 0 50px rgba(100, 10, 20, 0.15);
+            background: rgba(30, 8, 15, 0.45);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-radius: 32px;
+            border: 1px solid rgba(220, 40, 60, 0.4);
+            padding: 56px;
+            box-shadow: 
+                0 15px 50px rgba(0, 0, 0, 0.8),
+                inset 0 0 80px rgba(150, 20, 40, 0.2),
+                0 0 60px rgba(220, 40, 60, 0.3);
         }
 
         .options {
             display: flex;
             justify-content: center;
-            gap: 16px;
-            margin-bottom: 40px;
+            gap: 20px;
+            margin-bottom: 48px;
             flex-wrap: wrap;
         }
 
         .option-btn {
-            padding: 12px 32px;
-            font-size: 1.1rem;
-            background: rgba(40, 10, 20, 0.5);
-            color: #d0d0d0;
-            border: 1px solid rgba(200, 40, 60, 0.4);
-            border-radius: 12px;
+            padding: 14px 36px;
+            font-size: 1.2rem;
+            background: rgba(50, 10, 25, 0.6);
+            color: #e0e0e0;
+            border: 1px solid rgba(220, 50, 70, 0.5);
+            border-radius: 14px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            backdrop-filter: blur(8px);
+            transition: all 0.4s ease;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
         }
 
         .option-btn:hover {
-            background: rgba(80, 20, 40, 0.7);
+            background: rgba(100, 20, 40, 0.8);
+            border-color: #ff4050;
+            box-shadow: 0 0 30px rgba(255, 60, 80, 0.4);
         }
 
         .option-btn.active {
-            background: rgba(180, 30, 50, 0.8);
+            background: linear-gradient(135deg, rgba(200, 30, 50, 0.9), rgba(150, 20, 40, 0.9));
             color: #ffffff;
-            border-color: #e04050;
-            box-shadow: 0 0 25px rgba(220, 50, 70, 0.5);
+            border-color: #ff5060;
+            box-shadow: 0 0 40px rgba(255, 60, 80, 0.6);
+            transform: scale(1.05);
         }
 
+        /* Dual input for "User on Site" */
         .search-input-area {
             display: flex;
             justify-content: center;
-            gap: 24px;
+            gap: 28px;
             flex-wrap: wrap;
             align-items: center;
         }
 
+        .dual-input {
+            display: none;
+            gap: 20px;
+        }
+
+        .dual-input.active {
+            display: flex;
+        }
+
         input[type="text"] {
             flex: 1;
-            min-width: 380px;
-            padding: 22px 32px;
-            background: rgba(20, 5, 10, 0.6);
-            border: 1px solid rgba(200, 40, 60, 0.5);
-            border-radius: 18px;
+            min-width: 300px;
+            padding: 26px 36px;
+            background: rgba(25, 5, 15, 0.7);
+            border: 2px solid rgba(220, 50, 70, 0.6);
+            border-radius: 20px;
             color: #ffffff;
-            font-size: 1.4rem;
-            backdrop-filter: blur(12px);
-            transition: all 0.3s ease;
+            font-size: 1.6rem;
+            backdrop-filter: blur(14px);
+            transition: all 0.4s ease;
         }
 
         input[type="text"]:focus {
             outline: none;
-            border-color: #e04050;
-            box-shadow: 0 0 30px rgba(220, 50, 70, 0.4);
-            background: rgba(30, 10, 15, 0.7);
+            border-color: #ff5060;
+            box-shadow: 0 0 40px rgba(255, 80, 100, 0.5);
+            background: rgba(40, 10, 20, 0.8);
         }
 
         input[type="text"]::placeholder {
-            color: #909090;
+            color: #a06070;
         }
 
         .go-btn {
-            padding: 22px 52px;
-            font-size: 1.5rem;
-            background: linear-gradient(135deg, #c03040, #901020);
+            padding: 26px 60px;
+            font-size: 1.7rem;
+            background: linear-gradient(135deg, #e03040, #b02030);
             color: white;
             border: none;
-            border-radius: 18px;
+            border-radius: 20px;
             cursor: pointer;
-            box-shadow: 0 10px 30px rgba(180, 40, 60, 0.5);
-            transition: all 0.3s ease;
-            font-weight: 600;
+            box-shadow: 0 12px 40px rgba(220, 40, 60, 0.7);
+            transition: all 0.4s ease;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
 
         .go-btn:hover {
-            background: linear-gradient(135deg, #e04050, #b02030);
-            transform: translateY(-4px);
-            box-shadow: 0 15px 40px rgba(220, 50, 70, 0.6);
+            background: linear-gradient(135deg, #ff4050, #d02030);
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 20px 60px rgba(255, 60, 80, 0.8);
         }
 
         .features {
             display: flex;
             justify-content: center;
-            gap: 36px;
-            margin-top: 40px;
+            gap: 40px;
+            margin-top: 48px;
             flex-wrap: wrap;
         }
 
         .feature {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 1.1rem;
-            color: #b0b0b0;
+            gap: 14px;
+            font-size: 1.2rem;
+            color: #d0d0d0;
+            font-weight: 500;
         }
 
         .feature-icon {
-            font-size: 1.3rem;
-            color: #e05060;
+            font-size: 1.5rem;
+            color: #ff5060;
+            filter: drop-shadow(0 0 10px rgba(255, 80, 100, 0.6));
         }
     </style>
 </head>
 <body>
+    <div class="central-glow"></div>
+
     <div class="header">
         <h1>iSpy</h1>
-        <p class="subtitle">Correlate digital identities, infrastructure clues, and online footprints without leaving a trace.</p>
-        <p class="trust">Advanced reconnaissance tool trusted by investigators and security teams worldwide.</p>
+        <p class="subtitle">Uncover hidden connections across platforms, identities, and networks in complete silence.</p>
+        <p class="trust">Precision reconnaissance engine used by elite analysts and private investigators globally.</p>
     </div>
 
     <div class="lines">
-        <div class="line"></div>
-        <div class="line"></div>
+        <div class="line" style="--rot: -18deg;"></div>
+        <div class="line" style="--rot: 18deg;"></div>
     </div>
 
     <div class="eye-wrapper">
@@ -330,17 +384,25 @@
             <button class="option-btn">User on Site</button>
         </div>
 
-        <div class="search-input-area">
-            <input type="text" id="searchInput" placeholder="e.g. domain: example.org">
+        <!-- Single input (default for most options) -->
+        <div class="search-input-area" id="singleInputArea">
+            <input type="text" id="searchInput" placeholder="Enter your target...">
+            <button class="go-btn">Search →</button>
+        </div>
+
+        <!-- Dual input (only shown for "User on Site") -->
+        <div class="search-input-area dual-input" id="dualInputArea">
+            <input type="text" id="siteInput" placeholder="Site (e.g. roblox.com)">
+            <input type="text" id="userInput" placeholder="Username (e.g. buijyisunderrated)">
             <button class="go-btn">Search →</button>
         </div>
 
         <div class="features">
-            <div class="feature"><span class="feature-icon">⚡</span> Automated</div>
-            <div class="feature"><span class="feature-icon">🔍</span> Manual</div>
-            <div class="feature"><span class="feature-icon">📑</span> Bulk Search</div>
-            <div class="feature"><span class="feature-icon">🔒</span> Secure Search</div>
-            <div class="feature"><span class="feature-icon">🌐</span> 15+ Sources</div>
+            <div class="feature"><span class="feature-icon">⚡</span> Instant Automation</div>
+            <div class="feature"><span class="feature-icon">🔍</span> Deep Manual Scan</div>
+            <div class="feature"><span class="feature-icon">📑</span> Bulk Processing</div>
+            <div class="feature"><span class="feature-icon">🔒</span> Fully Anonymous</div>
+            <div class="feature"><span class="feature-icon">🌐</span> 20+ Data Sources</div>
         </div>
     </div>
 
@@ -353,26 +415,43 @@
             const eyeX = rect.left + rect.width / 2;
             const eyeY = rect.top + rect.height / 2;
             const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
-            const distance = Math.min(42, Math.hypot(e.clientX - eyeX, e.clientY - eyeY) / 10);
+            const distance = Math.min(45, Math.hypot(e.clientX - eyeX, e.clientY - eyeY) / 10);
             const offsetX = Math.cos(angle) * distance;
             const offsetY = Math.sin(angle) * distance;
             iris.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
         });
 
-        // Option buttons
+        // Option buttons + input switching
+        const singleInputArea = document.getElementById('singleInputArea');
+        const dualInputArea = document.getElementById('dualInputArea');
+        const searchInput = document.getElementById('searchInput');
+        const siteInput = document.getElementById('siteInput');
+        const userInput = document.getElementById('userInput');
+
         document.querySelectorAll('.option-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
-                const placeholders = {
-                    'Discord ID': 'e.g. 123456789012345678',
-                    'Username': 'e.g. winterfox',
-                    'IP Lookup': 'e.g. 192.168.1.1',
-                    'Website': 'e.g. example.com',
-                    'User on Site': 'e.g. reddit.com/u/username'
-                };
-                document.getElementById('searchInput').placeholder = placeholders[btn.textContent] || 'e.g. domain: example.org';
+                const option = btn.textContent.trim();
+
+                if (option === 'User on Site') {
+                    singleInputArea.style.display = 'none';
+                    dualInputArea.classList.add('active');
+                    siteInput.placeholder = 'Site (e.g. roblox.com)';
+                    userInput.placeholder = 'Username (e.g. buijyisunderrated)';
+                } else {
+                    dualInputArea.classList.remove('active');
+                    singleInputArea.style.display = 'flex';
+
+                    const placeholders = {
+                        'Discord ID': 'e.g. 123456789012345678',
+                        'Username': 'e.g. winterfox',
+                        'IP Lookup': 'e.g. 192.168.1.1',
+                        'Website': 'e.g. example.com'
+                    };
+                    searchInput.placeholder = placeholders[option] || 'Enter your target...';
+                }
             });
         });
     </script>
