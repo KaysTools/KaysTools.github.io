@@ -3,12 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KAYTOOLS — OSINT Platform</title>
+<title>KaysTools v1</title> 
 
 <style>
-/* =======================
-   ROOT VARIABLES
-======================= */
 :root {
   --bg-main: #050505;
   --bg-card: rgba(20, 5, 5, 0.85);
@@ -20,9 +17,6 @@
   --border-soft: rgba(255,255,255,0.08);
 }
 
-/* =======================
-   RESET
-======================= */
 * {
   margin: 0;
   padding: 0;
@@ -39,13 +33,11 @@ body {
   color: var(--text-main);
 }
 
-/* =======================
-   NAVBAR
-======================= */
+/* NAVBAR */
 header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   padding: 22px 48px;
 }
 
@@ -54,7 +46,6 @@ header {
   align-items: center;
   gap: 12px;
   font-weight: 600;
-  letter-spacing: 0.6px;
 }
 
 .logo-icon {
@@ -78,20 +69,16 @@ nav a:hover {
   color: var(--text-main);
 }
 
-/* =======================
-   HERO
-======================= */
+/* HERO */
 main {
-  text-align: center;
   padding: 90px 20px 120px;
+  text-align: center;
 }
 
 h1 {
   font-size: 48px;
-  font-weight: 600;
   max-width: 900px;
   margin: 0 auto;
-  line-height: 1.15;
 }
 
 .subtitle {
@@ -103,9 +90,7 @@ h1 {
   color: var(--text-muted);
 }
 
-/* =======================
-   CENTER ORB
-======================= */
+/* ORB */
 .hero-orb {
   margin: 60px auto 40px;
   width: 92px;
@@ -114,125 +99,118 @@ h1 {
   background: radial-gradient(circle, #a00000, #3a0000);
   display: grid;
   place-items: center;
-  box-shadow:
-    0 0 45px var(--accent-glow),
-    inset 0 0 18px rgba(255,255,255,0.15);
+  box-shadow: 0 0 45px var(--accent-glow);
   font-size: 28px;
 }
 
-/* =======================
-   SEARCH CARD
-======================= */
+/* SEARCH */
 .search-card {
-  max-width: 880px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 28px;
   border-radius: 22px;
   background: var(--bg-card);
   backdrop-filter: blur(16px);
   border: 1px solid var(--border-soft);
-  box-shadow:
-    0 0 60px rgba(133,0,0,0.35),
-    inset 0 0 0 1px rgba(255,255,255,0.04);
+  box-shadow: 0 0 60px rgba(133,0,0,0.35);
 }
 
-/* Search input */
 .search-input {
   display: flex;
-  gap: 14px;
+  gap: 12px;
+}
+
+.search-input select,
+.search-input input {
+  background: rgba(0,0,0,0.55);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 16px;
+  color: white;
+  font-size: 14px;
+}
+
+.search-input select {
+  width: 140px;
 }
 
 .search-input input {
   flex: 1;
-  background: rgba(0,0,0,0.55);
-  border: 1px solid var(--border-soft);
-  border-radius: 14px;
-  padding: 18px;
-  font-size: 15px;
-  color: white;
-  outline: none;
-}
-
-.search-input input::placeholder {
-  color: #9f7a7a;
 }
 
 .search-input button {
-  padding: 18px 28px;
+  padding: 16px 28px;
   border-radius: 14px;
   border: none;
   background: linear-gradient(135deg, #a00000, #5a0000);
   color: white;
-  font-weight: 500;
   cursor: pointer;
   box-shadow: 0 0 30px var(--accent-glow);
+}
+
+/* MODULE GRID */
+.modules {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.module {
+  background: var(--bg-card);
+  border-radius: 18px;
+  padding: 22px;
+  border: 1px solid var(--border-soft);
+  text-align: left;
   transition: all 0.2s ease;
 }
 
-.search-input button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 0 45px rgba(133,0,0,0.9);
+.module:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 35px var(--accent-soft);
 }
 
-/* =======================
-   OPTIONS
-======================= */
-.search-options {
-  margin-top: 22px;
+.module h3 {
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.module p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* STATS */
+.stats {
+  margin-top: 80px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: center;
+  gap: 60px;
   flex-wrap: wrap;
-  gap: 16px;
 }
 
-.mode button {
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: 1px solid var(--border-soft);
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 13px;
-  cursor: pointer;
-  margin-right: 6px;
+.stat {
+  text-align: center;
 }
 
-.mode .active {
-  background: rgba(133,0,0,0.35);
-  color: white;
-  box-shadow: inset 0 0 0 1px rgba(133,0,0,0.7);
+.stat strong {
+  font-size: 26px;
+  display: block;
 }
 
-.features span {
+.stat span {
   font-size: 13px;
   color: var(--text-muted);
-  margin-left: 18px;
 }
 
-/* =======================
-   MOBILE
-======================= */
+/* MOBILE */
 @media (max-width: 700px) {
-  header {
-    padding: 18px 24px;
-  }
-
-  h1 {
-    font-size: 34px;
-  }
-
-  .search-input {
-    flex-direction: column;
-  }
-
-  .search-input button {
-    width: 100%;
-  }
-
-  .search-options {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+  h1 { font-size: 34px; }
+  header { padding: 18px 24px; }
+  .search-input { flex-direction: column; }
 }
 </style>
 </head>
@@ -244,45 +222,70 @@ h1 {
     <div class="logo-icon">⬡</div>
     <span>KAYTOOLS</span>
   </div>
-
   <nav>
     <a href="#">Home</a>
-    <a href="#">Pricing</a>
+    <a href="#">Modules</a>
     <a href="#">API</a>
   </nav>
-
-  <div></div>
 </header>
 
 <main>
   <h1>Investigate Digital Footprints</h1>
-
   <p class="subtitle">
-    Correlate public intelligence, infrastructure signals, and identity traces
-    from a single unified OSINT interface.
+    Advanced OSINT tooling for identities, infrastructure, and public intelligence.
   </p>
 
   <div class="hero-orb">⬢</div>
 
   <section class="search-card">
     <div class="search-input">
-      <input type="text" placeholder="IP, domain, email, username…" />
+      <select>
+        <option>IP Address</option>
+        <option>Domain</option>
+        <option>Email</option>
+        <option>Username</option>
+      </select>
+      <input placeholder="Enter target..." />
       <button>Search →</button>
     </div>
+  </section>
 
-    <div class="search-options">
-      <div class="mode">
-        <button class="active">Automated</button>
-        <button>Manual</button>
-      </div>
-
-      <div class="features">
-        <span>Bulk Search</span>
-        <span>Secure Mode</span>
-        <span>15+ Sources</span>
-      </div>
+  <!-- MODULES -->
+  <section class="modules">
+    <div class="module">
+      <h3>🌐 Infrastructure Intel</h3>
+      <p>IP, ASN, hosting, ports, geolocation</p>
+    </div>
+    <div class="module">
+      <h3>👤 Identity Correlation</h3>
+      <p>Usernames, emails, social presence</p>
+    </div>
+    <div class="module">
+      <h3>🕵️ Breach Analysis</h3>
+      <p>Public breach indexing & exposure checks</p>
+    </div>
+    <div class="module">
+      <h3>🔗 Relationship Mapping</h3>
+      <p>Link analysis & entity connections</p>
     </div>
   </section>
+
+  <!-- STATS -->
+  <section class="stats">
+    <div class="stat">
+      <strong>15+</strong>
+      <span>Data Sources</span>
+    </div>
+    <div class="stat">
+      <strong>100%</strong>
+      <span>Public Data</span>
+    </div>
+    <div class="stat">
+      <strong>0</strong>
+      <span>Tracking Cookies</span>
+    </div>
+  </section>
+
 </main>
 
 </body>
