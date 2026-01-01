@@ -6,24 +6,29 @@
     <title>iSpy</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
+        html, body {
             margin: 0;
-            height: 100vh;
+            padding: 0;
+            height: 100%;
             background: #000000;
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+        }
+
+        body {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            font-family: 'Inter', sans-serif;
-            color: #ffffff;
-            overflow: hidden;
             position: relative;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            overflow-y: auto;   /* Enable vertical scrolling */
+            min-height: 100vh;
         }
 
         /* Deep void with intense dark red atmosphere */
         body::before {
             content: '';
-            position: absolute;
+            position: fixed;
             inset: 0;
             background: 
                 radial-gradient(circle at 20% 80%, rgba(180, 10, 30, 0.18) 0%, transparent 30%),
@@ -36,7 +41,7 @@
 
         body::after {
             content: '';
-            position: absolute;
+            position: fixed;
             inset: 0;
             background-image: 
                 radial-gradient(circle, rgba(220, 30, 50, 0.5) 1px, transparent 1px),
@@ -60,7 +65,7 @@
         }
 
         .central-glow {
-            position: absolute;
+            position: fixed;
             width: 800px;
             height: 800px;
             top: 50%;
@@ -83,6 +88,7 @@
             margin-top: 90px;
             z-index: 2;
             position: relative;
+            width: 100%;
         }
 
         h1 {
@@ -101,19 +107,20 @@
             color: #d0d0d0;
             margin: 20px 0 10px;
             max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
             font-weight: 500;
         }
 
         .trust {
             font-size: 1.1rem;
             color: #909090;
-            margin-top: 0;
             font-weight: 400;
         }
 
-        /* Flowing red lines */
+        /* Flowing red lines - fixed position */
         .lines {
-            position: absolute;
+            position: fixed;
             width: 1000px;
             height: 500px;
             top: 50%;
@@ -148,18 +155,19 @@
             100% { opacity: 0.9; transform: translateX(20px) rotate(var(--rot, 0deg)) scaleX(1.3); }
         }
 
-        /* Eye */
+        /* Eye - fixed in viewport center while scrolling */
         .eye-wrapper {
-            position: relative;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             z-index: 2;
-            margin: 70px 0 50px;
+            pointer-events: none;
         }
 
         .eye-container {
-            position: relative;
             width: 300px;
             height: 300px;
-            margin: 0 auto;
             filter: drop-shadow(0 0 60px rgba(220, 40, 60, 0.7));
         }
 
@@ -210,11 +218,11 @@
             opacity: 0.9;
         }
 
-        /* Search panel */
+        /* Search panel - now scrollable content */
         .search-container {
             width: 92%;
             max-width: 1200px;
-            margin-bottom: 80px;
+            margin: 120px auto 100px auto; /* Space for fixed eye */
             z-index: 2;
             background: rgba(30, 8, 15, 0.45);
             backdrop-filter: blur(28px);
@@ -226,8 +234,10 @@
                 0 15px 50px rgba(0, 0, 0, 0.8),
                 inset 0 0 80px rgba(150, 20, 40, 0.2),
                 0 0 60px rgba(220, 40, 60, 0.3);
+            position: relative;
         }
 
+        /* Rest of styles unchanged */
         .options {
             display: flex;
             justify-content: center;
@@ -263,7 +273,6 @@
             transform: scale(1.05);
         }
 
-        /* Dual input for "User on Site" */
         .search-input-area {
             display: flex;
             justify-content: center;
@@ -275,6 +284,7 @@
         .dual-input {
             display: none;
             gap: 20px;
+            width: 100%;
         }
 
         .dual-input.active {
@@ -363,6 +373,7 @@
         <div class="line" style="--rot: 18deg;"></div>
     </div>
 
+    <!-- Eye stays fixed in center while you scroll -->
     <div class="eye-wrapper">
         <div class="eye-container" id="eyeContainer">
             <div class="eyeball">
@@ -384,13 +395,11 @@
             <button class="option-btn">User on Site</button>
         </div>
 
-        <!-- Single input (default for most options) -->
         <div class="search-input-area" id="singleInputArea">
             <input type="text" id="searchInput" placeholder="Enter your target...">
             <button class="go-btn">Search →</button>
         </div>
 
-        <!-- Dual input (only shown for "User on Site") -->
         <div class="search-input-area dual-input" id="dualInputArea">
             <input type="text" id="siteInput" placeholder="Site (e.g. roblox.com)">
             <input type="text" id="userInput" placeholder="Username (e.g. buijyisunderrated)">
@@ -421,12 +430,10 @@
             iris.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
         });
 
-        // Option buttons + input switching
+        // Input switching
         const singleInputArea = document.getElementById('singleInputArea');
         const dualInputArea = document.getElementById('dualInputArea');
         const searchInput = document.getElementById('searchInput');
-        const siteInput = document.getElementById('siteInput');
-        const userInput = document.getElementById('userInput');
 
         document.querySelectorAll('.option-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -438,8 +445,6 @@
                 if (option === 'User on Site') {
                     singleInputArea.style.display = 'none';
                     dualInputArea.classList.add('active');
-                    siteInput.placeholder = 'Site (e.g. roblox.com)';
-                    userInput.placeholder = 'Username (e.g. buijyisunderrated)';
                 } else {
                     dualInputArea.classList.remove('active');
                     singleInputArea.style.display = 'flex';
