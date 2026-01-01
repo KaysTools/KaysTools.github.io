@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Glowing Crying Eye Follow</title>
+<title>Neon Eye - Detailed Original</title>
 <style>
     html, body {
         margin: 0;
@@ -17,66 +17,73 @@
         cursor: none;
     }
     svg {
-        width: 60vmin;
+        width: 70vmin;
         height: auto;
     }
-    .glow {
+    /* Subtle neon glow - only very light */
+    .neon {
         stroke: white;
-        stroke-width: 6;
         fill: none;
         stroke-linecap: round;
-        filter: drop-shadow(0 0 10px white)
-                drop-shadow(0 0 25px white);
-    }
-    .iris {
-        stroke: white;
-        stroke-width: 5;
-        fill: none;
-        filter: drop-shadow(0 0 8px white)
-                drop-shadow(0 0 18px white);
+        filter: drop-shadow(0 0 4px rgba(255,255,255,0.4))
+                drop-shadow(0 0 8px rgba(255,255,255,0.2));
     }
     .pupil {
         fill: white;
-        filter: drop-shadow(0 0 10px white)
-                drop-shadow(0 0 20px white);
-    }
-    .tear {
-        stroke: white;
-        stroke-width: 5;
-        fill: none;
-        stroke-linecap: round;
-        filter: drop-shadow(0 0 8px white)
-                drop-shadow(0 0 18px white);
+        filter: drop-shadow(0 0 4px rgba(255,255,255,0.5));
     }
 </style>
 </head>
 <body>
-<svg id="eye" viewBox="0 0 300 150">
-    <!-- Upper eyelid - more pointed and slanted -->
-    <path class="glow" d="M40 75 Q150 25 260 75" />
-    <!-- Lower eyelid - matching curve but lower -->
-    <path class="glow" d="M40 75 Q150 115 260 75" />
-    <!-- Iris -->
-    <circle class="iris" cx="150" cy="75" r="38" />
-    <!-- Pupil -->
-    <circle id="pupil" class="pupil" cx="150" cy="75" r="14" />
-    <!-- Tear drop - simple hook-like curve matching the reference -->
-    <path class="tear" d="M135 95 Q125 120 140 140" />
+<svg id="eye" viewBox="0 0 400 200">
+    <!-- Upper eyelid - elegant asymmetric curve -->
+    <path class="neon" stroke-width="5" d="M50 100 Q120 40, 200 60 Q280 40, 350 100" />
+    
+    <!-- Lower eyelid - softer curve -->
+    <path class="neon" stroke-width="5" d="M50 100 Q140 150, 200 130 Q260 150, 350 100" />
+    
+    <!-- Sclera outline (white part) - very subtle inner line -->
+    <ellipse class="neon" stroke-width="3" cx="200" cy="100" rx="110" ry="70" />
+    
+    <!-- Iris - detailed concentric rings -->
+    <circle class="neon" stroke-width="4" cx="200" cy="100" r="55" />
+    <circle class="neon" stroke-width="2" cx="200" cy="100" r="45" />
+    <circle class="neon" stroke-width="3" cx="200" cy="100" r="35" />
+    
+    <!-- Pupil - follows mouse -->
+    <circle id="pupil" class="pupil" cx="200" cy="100" r="18" />
+    
+    <!-- Highlight in pupil for life-like effect -->
+    <circle fill="white" opacity="0.8" cx="208" cy="92" r="6" />
+    <circle fill="white" opacity="0.4" cx="195" cy="105" r="4" />
+    
+    <!-- Lower lash line - delicate lashes -->
+    <path class="neon" stroke-width="2" d="M100 110 Q120 125 140 118" />
+    <path class="neon" stroke-width="2" d="M150 120 Q170 135 190 125" />
+    <path class="neon" stroke-width="2" d="M210 122 Q230 137 250 127" />
+    <path class="neon" stroke-width="2" d="M260 118 Q280 130 300 120" />
+    
+    <!-- Upper subtle crease -->
+    <path class="neon" stroke-width="2" opacity="0.6" d="M80 70 Q200 50 320 70" />
+    
+    <!-- Single elegant tear -->
+    <path class="neon" stroke-width="4" d="M160 115 Q145 140 155 170" />
+    <circle class="neon" stroke-width="3" fill="none" cx="155" cy="175" r="8" />
 </svg>
 
 <script>
 const pupil = document.getElementById("pupil");
 const eye = document.getElementById("eye");
-const eyeCenter = { x: 150, y: 75 };
-const maxOffset = 16; // Adjusted for the iris size
+const eyeCenter = { x: 200, y: 100 };
+const maxOffset = 25; // Room to move inside the iris
 
 document.addEventListener("mousemove", (e) => {
     const rect = eye.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
     
-    const scaleX = 300 / rect.width;
-    const scaleY = 150 / rect.height;
+    const scaleX = 400 / rect.width;
+    const scaleY = 200 / rect.height;
     const svgX = mouseX * scaleX;
     const svgY = mouseY * scaleY;
     
