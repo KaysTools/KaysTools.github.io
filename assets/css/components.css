@@ -1,0 +1,158 @@
+/* =========================================================
+   COMPONENTS.CSS
+   Cards, inputs, picker, panels
+========================================================= */
+
+/* -------------------------
+   SEARCH PANEL
+------------------------- */
+.search-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 0 60px rgba(139,0,0,0.35);
+}
+
+/* -------------------------
+   SEARCH ROW
+------------------------- */
+.search-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+/* -------------------------
+   INPUTS
+------------------------- */
+.input {
+  background: rgba(0,0,0,0.55);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 16px;
+  color: var(--text-main);
+  font-size: 14px;
+  width: 100%;
+}
+
+.input::placeholder {
+  color: var(--text-dim);
+}
+
+/* -------------------------
+   SEARCH BUTTON
+------------------------- */
+.btn-search {
+  padding: 16px 30px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #a00000, #5a0000);
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 0 30px var(--accent-glow);
+}
+
+/* -------------------------
+   CUSTOM PICKER
+------------------------- */
+.picker {
+  position: relative;
+  width: 170px;
+}
+
+.picker-toggle {
+  background: rgba(0,0,0,0.65);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 13px;
+  color: var(--text-main);
+  cursor: pointer;
+  user-select: none;
+}
+
+.picker-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  overflow: hidden;
+  z-index: 20;
+  display: none;
+}
+
+.picker-menu.open {
+  display: block;
+}
+
+.picker-item {
+  padding: 14px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.picker-item:last-child {
+  border-bottom: none;
+}
+
+.picker-item:hover {
+  background: var(--accent-soft);
+}
+
+/* -------------------------
+   MODULE CARDS
+------------------------- */
+.module {
+  background: var(--bg-panel);
+  border-radius: 18px;
+  padding: 22px;
+  border: 1px solid var(--border-soft);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.module h3 {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.module p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.module:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 35px var(--accent-soft);
+}
+
+/* -------------------------
+   STATS
+------------------------- */
+.stat strong {
+  font-size: 26px;
+  display: block;
+}
+
+.stat span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* -------------------------
+   MOBILE
+------------------------- */
+@media (max-width: 720px) {
+  .search-row {
+    flex-direction: column;
+  }
+
+  .picker {
+    width: 100%;
+  }
+}
