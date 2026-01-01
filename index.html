@@ -20,7 +20,7 @@
             position: relative;
         }
 
-        /* Subtle animated red pulses across the background */
+        /* Subtle pulsing red waves in background */
         body::before {
             content: '';
             position: absolute;
@@ -44,7 +44,7 @@
             100% { background-position: 100% 100%; }
         }
 
-        /* Title - big, bloody, creepy */
+        /* Bloody title */
         h1 {
             margin-top: 50px;
             font-size: 6rem;
@@ -61,7 +61,7 @@
             z-index: 2;
         }
 
-        /* The eye stays exactly as before (bigger, red, follows cursor) */
+        /* Eye - unchanged, still follows cursor */
         .eye-container {
             position: relative;
             width: 280px;
@@ -115,50 +115,18 @@
             opacity: 0.8;
         }
 
-        /* Bottom search area - completely remade */
+        /* Search area - now always visible, no reveal button */
         .search-container {
             width: 90%;
             max-width: 1000px;
             margin-bottom: 60px;
             z-index: 2;
             text-align: center;
-        }
-
-        .reveal-btn {
-            padding: 20px 60px;
-            font-family: 'Creepster', cursive;
-            font-size: 3rem;
-            background: #000;
-            color: #ff0000;
-            border: 4px solid #ff0000;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 0 30px #ff0000;
-            text-shadow: 0 0 15px #ff0000;
-            transition: all 0.4s;
-            margin-bottom: 30px;
-        }
-
-        .reveal-btn:hover {
-            background: #330000;
-            transform: scale(1.1);
-            box-shadow: 0 0 50px #ff0000;
-        }
-
-        .search-panel {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 1s ease-out;
             background: rgba(20, 0, 0, 0.7);
             border: 3px solid #ff0000;
             border-radius: 30px;
-            padding: 0 40px;
-            box-shadow: 0 0 40px rgba(255, 0, 0, 0.6);
-        }
-
-        .search-panel.open {
-            max-height: 500px;
             padding: 40px;
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.6);
         }
 
         .options {
@@ -238,7 +206,7 @@
 
     <h1>iSpy</h1>
 
-    <!-- Eye unchanged - still follows cursor -->
+    <!-- Eye follows your cursor -->
     <div class="eye-container" id="eyeContainer">
         <div class="eyeball">
             <div class="iris" id="iris">
@@ -249,27 +217,24 @@
         </div>
     </div>
 
+    <!-- Search panel always visible -->
     <div class="search-container">
-        <button class="reveal-btn" id="revealBtn">REVEAL</button>
+        <div class="options">
+            <button class="option-btn active">Discord ID</button>
+            <button class="option-btn">Username</button>
+            <button class="option-btn">IP Lookup</button>
+            <button class="option-btn">Website</button>
+            <button class="option-btn">User on Site</button>
+        </div>
 
-        <div class="search-panel" id="searchPanel">
-            <div class="options">
-                <button class="option-btn active">Discord ID</button>
-                <button class="option-btn">Username</button>
-                <button class="option-btn">IP Lookup</button>
-                <button class="option-btn">Website</button>
-                <button class="option-btn">User on Site</button>
-            </div>
-
-            <div class="search-input-area">
-                <input type="text" id="searchInput" placeholder="Enter target...">
-                <button class="go-btn">GO →</button>
-            </div>
+        <div class="search-input-area">
+            <input type="text" id="searchInput" placeholder="Enter target...">
+            <button class="go-btn">GO →</button>
         </div>
     </div>
 
     <script>
-        // Eye follows cursor (unchanged)
+        // Eye follows cursor
         const eyeContainer = document.getElementById('eyeContainer');
         const iris = document.getElementById('iris');
 
@@ -287,19 +252,21 @@
             iris.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
         });
 
-        // Reveal button toggles search panel
-        const revealBtn = document.getElementById('revealBtn');
-        const searchPanel = document.getElementById('searchPanel');
-
-        revealBtn.addEventListener('click', () => {
-            searchPanel.classList.toggle('open');
-        });
-
-        // Option buttons highlight
+        // Option buttons - clickable highlight
         document.querySelectorAll('.option-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
+
+                // Change placeholder based on selected option
+                const placeholders = {
+                    'Discord ID': 'e.g. 123456789012345678',
+                    'Username': 'e.g. winterfox',
+                    'IP Lookup': 'e.g. 192.168.1.1',
+                    'Website': 'e.g. example.com',
+                    'User on Site': 'e.g. reddit.com/u/username'
+                };
+                document.getElementById('searchInput').placeholder = placeholders[btn.textContent] || 'Enter target...';
             });
         });
     </script>
