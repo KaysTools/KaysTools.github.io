@@ -1,0 +1,109 @@
+/* =========================================================
+   BASE.CSS
+   Core variables, reset, global styles
+========================================================= */
+
+/* -------------------------
+   COLOR VARIABLES
+------------------------- */
+:root {
+  --bg-main: #030303;
+  --bg-panel: rgba(14, 6, 6, 0.92);
+  --bg-soft: rgba(255,255,255,0.03);
+
+  --accent-main: #8b0000;
+  --accent-soft: rgba(139,0,0,0.25);
+  --accent-glow: rgba(139,0,0,0.65);
+
+  --text-main: #ffffff;
+  --text-muted: #bfaeae;
+  --text-dim: #8c7a7a;
+
+  --border-soft: rgba(255,255,255,0.08);
+  --border-hard: rgba(255,255,255,0.15);
+
+  --good: #1f7a1f;
+  --warn: #7a5a1f;
+  --bad:  #7a1f1f;
+}
+
+/* -------------------------
+   RESET
+------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* -------------------------
+   BODY
+------------------------- */
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(139,0,0,0.18), transparent 45%),
+    radial-gradient(circle at 80% 80%, rgba(139,0,0,0.12), transparent 45%),
+    var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+
+/* -------------------------
+   TEXT DEFAULTS
+------------------------- */
+h1, h2, h3, h4, h5 {
+  font-weight: 600;
+  letter-spacing: 0.6px;
+}
+
+p {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* -------------------------
+   UTILITY
+------------------------- */
+.hidden {
+  display: none !important;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* -------------------------
+   SCROLLBAR (optional polish)
+------------------------- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-soft);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-main);
+}
