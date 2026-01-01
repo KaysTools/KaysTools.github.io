@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Network</title>
+  <title>Observer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
@@ -10,9 +10,9 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      background: #000000; /* TRUE BLACK */
+      background: #000000;
       overflow: hidden;
-      cursor: none;
+      cursor: default; /* restore normal cursor */
     }
 
     canvas {
@@ -41,22 +41,17 @@ resize();
 
 /* ---------- Mouse ---------- */
 
-const mouse = { x: null, y: null };
+const mouse = { x: w / 2, y: h / 2 };
 
 window.addEventListener("mousemove", e => {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
 });
 
-window.addEventListener("mouseleave", () => {
-  mouse.x = mouse.y = null;
-});
+/* ---------- Network ---------- */
 
-/* ---------- Nodes ---------- */
-
-const NODE_COUNT = 150;
-const LINK_DISTANCE = 120;
-const CURSOR_DISTANCE = 160;
+const NODE_COUNT = 120;
+const LINK_DISTANCE = 140;
 
 const nodes = [];
 
@@ -64,9 +59,9 @@ class Node {
   constructor() {
     this.x = Math.random() * w;
     this.y = Math.random() * h;
-    this.vx = (Math.random() - 0.5) * 0.35;
-    this.vy = (Math.random() - 0.5) * 0.35;
-    this.r = 1.3;
+    this.vx = (Math.random() - 0.5) * 0.9;
+    this.vy = (Math.random() - 0.5) * 0.9;
+    this.r = 1.2;
   }
 
   update() {
@@ -78,23 +73,17 @@ class Node {
   }
 
   draw() {
-    ctx.save();
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
     ctx.fillStyle = "#ffffff";
-    ctx.shadowBlur = 8;
-    ctx.shadowColor = "rgba(255,255,255,0.6)";
     ctx.fill();
-    ctx.restore();
   }
 }
 
-/* ---------- Connections ---------- */
-
 function drawConnections() {
-  ctx.save();
-  ctx.shadowBlur = 12;
-  ctx.shadowColor = "rgba(255,255,255,0.25)";
+  ctx.lineWidth = 0.5;
+  ctx.shadowBlur = 6;
+  ctx.shadowColor = "rgba(255,255,255,0.3)";
 
   for (let i = 0; i < nodes.length; i++) {
     for (let j = i + 1; j < nodes.length; j++) {
@@ -105,51 +94,57 @@ function drawConnections() {
       if (d < LINK_DISTANCE) {
         const a = 1 - d / LINK_DISTANCE;
         ctx.strokeStyle = `rgba(255,255,255,${a * 0.25})`;
-        ctx.lineWidth = 0.6;
         ctx.beginPath();
         ctx.moveTo(nodes[i].x, nodes[i].y);
         ctx.lineTo(nodes[j].x, nodes[j].y);
         ctx.stroke();
       }
     }
-
-    /* connect to cursor */
-    if (mouse.x !== null) {
-      const dx = nodes[i].x - mouse.x;
-      const dy = nodes[i].y - mouse.y;
-      const d = Math.hypot(dx, dy);
-
-      if (d < CURSOR_DISTANCE) {
-        const a = 1 - d / CURSOR_DISTANCE;
-        ctx.strokeStyle = `rgba(255,255,255,${a * 0.45})`;
-        ctx.lineWidth = 0.7;
-        ctx.beginPath();
-        ctx.moveTo(nodes[i].x, nodes[i].y);
-        ctx.lineTo(mouse.x, mouse.y);
-        ctx.stroke();
-      }
-    }
   }
 
-  ctx.restore();
+  ctx.shadowBlur = 0;
 }
 
-/* ---------- Cursor ---------- */
+/* ---------- Eye ---------- */
 
-function drawCursor() {
-  if (mouse.x === null) return;
+function drawEye() {
+  const cx = w / 2;
+  const cy = h / 2;
 
+  const eyeRadiusX = 180;
+  const eyeRadiusY = 90;
+
+  // glow
+  ctx.save();
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = 3;
+  ctx.shadowBlur = 40;
+  ctx.shadowColor = "rgba(255,255,255,0.9)";
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, eyeRadiusX, eyeRadiusY, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+
+  // pupil direction
+  const dx = mouse.x - cx;
+  const dy = mouse.y - cy;
+  const angle = Math.atan2(dy, dx);
+
+  const maxOffset = 35;
+  const px = cx + Math.cos(angle) * maxOffset;
+  const py = cy + Math.sin(angle) * maxOffset;
+
+  // pupil
   ctx.save();
   ctx.beginPath();
-  ctx.arc(mouse.x, mouse.y, 5, 0, Math.PI * 2);
-  ctx.fillStyle = "#ffffff";
-  ctx.shadowBlur = 10;
-  ctx.shadowColor = "rgba(255,255,255,0.8)";
+  ctx.arc(px, py, 16, 0, Math.PI * 2);
+  ctx.fillStyle = "#000000";
   ctx.fill();
 
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = "#000000";
-  ctx.shadowBlur = 0;
+  ctx.shadowBlur = 25;
+  ctx.shadowColor = "rgba(255,255,255,0.8)";
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = 2;
   ctx.stroke();
   ctx.restore();
 }
@@ -165,7 +160,7 @@ function animate() {
   });
 
   drawConnections();
-  drawCursor();
+  drawEye();
 
   requestAnimationFrame(animate);
 }
