@@ -1,175 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- META -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>Open Source Intelligence</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>KAYTOOLS — Open-Source Intelligence Toolkit</title>
-  <meta name="description" content="KAYTOOLS is a browser-based OSINT platform for investigating digital footprints across infrastructure, identity, and exposure data.">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #0b0d10;
+      color: #e5e7eb;
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+    }
 
-  <!-- STYLES -->
-  <link rel="stylesheet" href="assets/css/base.css">
-  <link rel="stylesheet" href="assets/css/layout.css">
-  <link rel="stylesheet" href="assets/css/components.css">
-  <link rel="stylesheet" href="assets/css/effects.css">
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
 
-  <!-- FAVICON (optional, recommended) -->
-  <!-- <link rel="icon" href="assets/favicon.ico"> -->
+    .hero {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      max-width: 720px;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      letter-spacing: 0.02em;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #d1d5db;
+    }
+  </style>
 </head>
-
 <body>
 
-  <!-- SITE HEADER -->
-  <header class="site-header">
-    <div class="brand">
-      <div class="brand-icon" aria-hidden="true"></div>
-      <span class="brand-name">KAYTOOLS</span>
-    </div>
+<canvas id="network"></canvas>
 
-    <nav class="site-nav" aria-label="Primary navigation">
-      <a href="/" aria-current="page">Home</a>
-      <a href="#modules">Modules</a>
-      <a href="#api">API</a>
-    </nav>
-  </header>
-
-  <!-- MAIN CONTENT -->
-  <main id="main-content">
-
-    <!-- HERO -->
-    <section class="hero" aria-labelledby="hero-title">
-      <h1 id="hero-title">Investigate Digital Footprints</h1>
-      <p class="hero-subtitle">
-        Open-source intelligence tools for identity, infrastructure, and exposure analysis.
-      </p>
-    </section>
-
-    <!-- SEARCH PANEL -->
-    <section class="section section-narrow" aria-labelledby="search-title">
-      <h2 id="search-title" class="visually-hidden">Search Intelligence Modules</h2>
-
-      <div class="search-panel">
-
-        <div class="search-row">
-
-          <!-- TARGET TYPE PICKER -->
-          <div class="picker" data-picker>
-            <button
-              type="button"
-              class="picker-toggle"
-              aria-haspopup="listbox"
-              aria-expanded="false"
-            >
-              IP Address
-            </button>
-
-            <div class="picker-menu" role="listbox">
-              <button class="picker-item" role="option" data-type="ip">IP Address</button>
-              <button class="picker-item" role="option" data-type="domain">Domain</button>
-              <button class="picker-item" role="option" data-type="email">Email</button>
-              <button class="picker-item" role="option" data-type="username">Username</button>
-            </div>
-          </div>
-
-          <!-- SEARCH INPUT -->
-          <input
-            id="search-input"
-            class="input"
-            type="text"
-            placeholder="Enter target value"
-            autocomplete="off"
-            spellcheck="false"
-            aria-label="Target value"
-          >
-
-          <!-- SEARCH BUTTON -->
-          <button
-            id="search-button"
-            class="btn-search"
-            type="button"
-          >
-            Search
-          </button>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- MODULE OVERVIEW -->
-    <section id="modules" class="section section-wide" aria-labelledby="modules-title">
-      <h2 id="modules-title" class="section-title">Core Intelligence Modules</h2>
-
-      <div class="modules-grid">
-
-        <article class="module">
-          <h3>Infrastructure Intelligence</h3>
-          <p>
-            IP ranges, ASN metadata, hosting providers, exposed services, and network attribution.
-          </p>
-        </article>
-
-        <article class="module">
-          <h3>Identity Correlation</h3>
-          <p>
-            Username reuse, email linkage, alias discovery, and cross-platform presence.
-          </p>
-        </article>
-
-        <article class="module">
-          <h3>Breach Analysis</h3>
-          <p>
-            Public breach indexing, credential exposure indicators, and historical leak context.
-          </p>
-        </article>
-
-        <article class="module">
-          <h3>Relationship Mapping</h3>
-          <p>
-            Entity relationships, shared infrastructure, behavioral overlap, and attribution signals.
-          </p>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- PLATFORM STATS -->
-    <section class="stats" aria-label="Platform statistics">
-
-      <div class="stat">
-        <strong>15+</strong>
-        <span>Public Data Sources</span>
-      </div>
-
-      <div class="stat">
-        <strong>100%</strong>
-        <span>Client-Side Queries</span>
-      </div>
-
-      <div class="stat">
-        <strong>0</strong>
-        <span>Tracking Cookies</span>
-      </div>
-
-    </section>
-
-  </main>
-
-  <!-- FOOTER (optional but recommended) -->
-  <footer class="site-footer">
+<div class="hero">
+  <div class="hero-content">
+    <h1>Open-Source Intelligence</h1>
     <p>
-      © <span id="year"></span> KAYTOOLS · Open-Source Intelligence Platform
+      Connecting publicly available information into meaningful insight.<br>
+      Ethical. Transparent. Legal.
     </p>
-  </footer>
+  </div>
+</div>
 
-  <!-- JAVASCRIPT -->
-  <script type="module" src="assets/js/ui.js"></script>
+<script>
+  const canvas = document.getElementById("network");
+  const ctx = canvas.getContext("2d");
 
-  <!-- SMALL INLINE UTIL (safe) -->
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+  let width, height;
+  const nodes = [];
+  const NODE_COUNT = 120;
+  const CONNECT_DISTANCE = 120;
+  const CURSOR_RADIUS = 140;
+
+  const mouse = { x: null, y: null };
+
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  window.addEventListener("mousemove", e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
+  window.addEventListener("mouseleave", () => {
+    mouse.x = null;
+    mouse.y = null;
+  });
+
+  class Node {
+    constructor() {
+      this.x = Math.random() * width;
+      this.y = Math.random() * height;
+      this.vx = (Math.random() - 0.5) * 0.4;
+      this.vy = (Math.random() - 0.5) * 0.4;
+      this.radius = 1.2;
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+
+      if (this.x < 0 || this.x > width) this.vx *= -1;
+      if (this.y < 0 || this.y > height) this.vy *= -1;
+
+      if (mouse.x !== null) {
+        const dx = mouse.x - this.x;
+        const dy = mouse.y - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < CURSOR_RADIUS) {
+          this.x += dx * 0.002;
+          this.y += dy * 0.002;
+        }
+      }
+    }
+
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = "#f5f5f5";
+      ctx.fill();
+    }
+  }
+
+  function connectNodes() {
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < CONNECT_DISTANCE) {
+          const opacity = 1 - dist / CONNECT_DISTANCE;
+          ctx.strokeStyle = `rgba(255,255,255,${opacity * 0.25})`;
+          ctx.lineWidth = 0.6;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+
+    nodes.forEach(node => {
+      node.update();
+      node.draw();
+    });
+
+    connectNodes();
+    requestAnimationFrame(animate);
+  }
+
+  for (let i = 0; i < NODE_COUNT; i++) {
+    nodes.push(new Node());
+  }
+
+  animate();
+</script>
 
 </body>
 </html>
