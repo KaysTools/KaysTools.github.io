@@ -1,60 +1,66 @@
 /* =========================================================
    VALIDATORS.JS
-   Strict input validation (no inference)
+   Strict, deterministic input validation
 ========================================================= */
 
 /* -------------------------
-   IP ADDRESS
+   REGEX DEFINITIONS
 ------------------------- */
-export function isValidIP(value) {
-  const ipRegex =
-    /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
-  return ipRegex.test(value);
-}
+
+// IPv4 (no geo guessing, no DNS)
+const ipRegex =
+  /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/;
+
+// Domain (no protocol, no path)
+const domainRegex =
+  /^(?!:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+
+// Email (basic OSINT-safe)
+const emailRegex =
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Username (generic, platform-agnostic)
+const usernameRegex =
+  /^[a-zA-Z0-9._-]{3,32}$/;
 
 /* -------------------------
-   DOMAIN
+   MAIN VALIDATOR
 ------------------------- */
-export function isValidDomain(value) {
-  const domainRegex =
-    /^(?!-)(?:[a-zA-Z0-9-]{1,63}\.)+[a-zA-Z]{2,}$/;
-  return domainRegex.test(value);
-}
+export function validateInput(type, value) {
+  if (!value || !value.trim()) {
+    return {
+      valid: false,
+      reason: "Input is empty"
+    };
+  }
 
-/* -------------------------
-   EMAIL
-------------------------- */
-export function isValidEmail(value) {
-  const emailRegex =
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(value);
-}
-
-/* -------------------------
-   USERNAME
-------------------------- */
-export function isValidUsername(value) {
-  const usernameRegex =
-    /^[a-zA-Z0-9_.-]{3,32}$/;
-  return usernameRegex.test(value);
-}
-
-/* -------------------------
-   MASTER CHECK
-------------------------- */
-export function validateByType(type, value) {
-  if (!value) return false;
+  const input = value.trim();
 
   switch (type) {
     case "ip":
-      return isValidIP(value);
+      return ipRegex.test(input)
+        ? { valid: true }
+        : { valid: false, reason: "Invalid IPv4 address" };
+
     case "domain":
-      return isValidDomain(value);
+      return domainRegex.test(input)
+        ? { valid: true }
+        : { valid: false, reason: "Invalid domain format" };
+
     case "email":
-      return isValidEmail(value);
+      return emailRegex.test(input)
+        ? { valid: true }
+        : { valid: false, reason: "Invalid email address" };
+
     case "username":
-      return isValidUsername(value);
+      return usernameRegex.test(input)
+        ? { valid: true }
+        : { valid: false, reason: "Invalid username format" };
+
     default:
-      return false;
+      return {
+        valid: false,
+        reason: "Unknown target type"
+      };
   }
 }
