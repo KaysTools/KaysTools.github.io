@@ -1,105 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Watching Eye</title>
+<meta charset="UTF-8" />
+<title>Glowing Crying Eye Follow</title>
 <style>
-html, body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    background: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    cursor: none;
-}
-svg {
-    width: 70vmin;
-}
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        cursor: none;
+    }
+    svg {
+        width: 60vmin;
+        height: auto;
+    }
+    .glow {
+        stroke: white;
+        stroke-width: 6;
+        fill: none;
+        stroke-linecap: round;
+        filter: drop-shadow(0 0 10px white)
+                drop-shadow(0 0 25px white);
+    }
+    .iris {
+        stroke: white;
+        stroke-width: 5;
+        fill: none;
+        filter: drop-shadow(0 0 8px white)
+                drop-shadow(0 0 18px white);
+    }
+    .pupil {
+        fill: white;
+        filter: drop-shadow(0 0 10px white)
+                drop-shadow(0 0 20px white);
+    }
+    .tear {
+        stroke: white;
+        stroke-width: 5;
+        fill: none;
+        stroke-linecap: round;
+        filter: drop-shadow(0 0 8px white)
+                drop-shadow(0 0 18px white);
+    }
 </style>
 </head>
 <body>
-
-<svg id="eyeSVG" viewBox="0 0 600 300">
-
-<defs>
-    <!-- Strong soft bloom -->
-    <filter id="bloom" x="-100%" y="-100%" width="300%" height="300%">
-        <feGaussianBlur stdDeviation="8" result="blur1"/>
-        <feGaussianBlur stdDeviation="20" result="blur2"/>
-        <feMerge>
-            <feMergeNode in="blur2"/>
-            <feMergeNode in="blur1"/>
-            <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-    </filter>
-
-    <!-- Foggy iris glow -->
-    <filter id="fog">
-        <feGaussianBlur stdDeviation="25"/>
-    </filter>
-</defs>
-
-<!-- Eye outline -->
-<g filter="url(#bloom)">
-    <!-- Upper lid -->
-    <path d="M60 150 Q300 70 540 150"
-          fill="none"
-          stroke="white"
-          stroke-width="10"
-          stroke-linecap="round"/>
-
-    <!-- Lower lid -->
-    <path d="M60 150 Q300 230 540 150"
-          fill="none"
-          stroke="white"
-          stroke-width="10"
-          stroke-linecap="round"/>
-</g>
-
-<!-- Iris fog -->
-<circle cx="300" cy="150" r="70"
-        fill="white"
-        opacity="0.18"
-        filter="url(#fog)"/>
-
-<!-- Tear / sigil -->
-<path d="M285 185
-         Q260 215 280 245
-         Q300 270 295 295"
-      fill="none"
-      stroke="white"
-      stroke-width="6"
-      opacity="0.85"
-      filter="url(#bloom)"
-      stroke-linecap="round"/>
-
-<!-- Pupil (mouse-following) -->
-<circle id="pupil"
-        cx="300"
-        cy="150"
-        r="14"
-        fill="white"
-        filter="url(#bloom)"/>
-
+<svg id="eye" viewBox="0 0 300 150">
+    <!-- Upper eyelid - more pointed and slanted -->
+    <path class="glow" d="M40 75 Q150 25 260 75" />
+    <!-- Lower eyelid - matching curve but lower -->
+    <path class="glow" d="M40 75 Q150 115 260 75" />
+    <!-- Iris -->
+    <circle class="iris" cx="150" cy="75" r="38" />
+    <!-- Pupil -->
+    <circle id="pupil" class="pupil" cx="150" cy="75" r="14" />
+    <!-- Tear drop - simple hook-like curve matching the reference -->
+    <path class="tear" d="M135 95 Q125 120 140 140" />
 </svg>
 
 <script>
 const pupil = document.getElementById("pupil");
-const svg = document.getElementById("eyeSVG");
-
-const center = { x: 300, y: 150 };
-const maxOffset = 22;
+const eye = document.getElementById("eye");
+const eyeCenter = { x: 150, y: 75 };
+const maxOffset = 16; // Adjusted for the iris size
 
 document.addEventListener("mousemove", (e) => {
-    const rect = svg.getBoundingClientRect();
-
-    const mx = (e.clientX - rect.left) * (600 / rect.width);
-    const my = (e.clientY - rect.top) * (300 / rect.height);
-
-    let dx = mx - center.x;
-    let dy = my - center.y;
-
-    const dist = Math.sqrt(dx*dx + dy*dy);
+    const rect = eye.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    const scaleX = 300 / rect.width;
+    const scaleY = 150 / rect.height;
+    const svgX = mouseX * scaleX;
+    const svgY = mouseY * scaleY;
+    
+    let dx = svgX - eyeCenter.x;
+    let dy = svgY - eyeCenter.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    if (distance > maxOffset) {
+        dx = (dx / distance) * maxOffset;
+        dy = (dy / distance) * maxOffset;
+    }
+    
+    pupil.setAttribute("cx", eyeCenter.x + dx);
+    pupil.setAttribute("cy", eyeCenter.y + dy);
+});
+</script>
+</body>
+</html>
