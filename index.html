@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>Eye</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <style>
     html, body {
       margin: 0;
@@ -13,7 +12,6 @@
       background: #000;
       overflow: hidden;
     }
-
     canvas {
       display: block;
     }
@@ -35,87 +33,85 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 
-/* ---------- Mouse ---------- */
+/* mouse */
 const mouse = { x: w / 2, y: h / 2 };
 window.addEventListener("mousemove", e => {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
 });
 
-/* ---------- Eye ---------- */
+/* draw eye */
 function drawEye() {
+  ctx.clearRect(0, 0, w, h);
+
   const cx = w / 2;
   const cy = h / 2;
 
-  const eyeW = 360;
-  const eyeH = 160;
+  const eyeWidth = 420;
+  const eyeHeight = 140;
+  const circleR = 70;
 
-  ctx.clearRect(0, 0, w, h);
-
-  /* --- outer eye outline --- */
+  /* === outer eye === */
   ctx.save();
-  ctx.strokeStyle = "#ffffff";
+  ctx.strokeStyle = "#fff";
   ctx.lineWidth = 4;
-  ctx.shadowBlur = 40;
+  ctx.shadowBlur = 35;
   ctx.shadowColor = "rgba(255,255,255,0.9)";
-
   ctx.beginPath();
-  ctx.moveTo(cx - eyeW / 2, cy);
-  ctx.quadraticCurveTo(cx, cy - eyeH / 2, cx + eyeW / 2, cy);
-  ctx.quadraticCurveTo(cx, cy + eyeH / 2, cx - eyeW / 2, cy);
-  ctx.closePath();
+  ctx.moveTo(cx - eyeWidth / 2, cy);
+  ctx.quadraticCurveTo(cx, cy - eyeHeight, cx + eyeWidth / 2, cy);
+  ctx.quadraticCurveTo(cx, cy + eyeHeight, cx - eyeWidth / 2, cy);
   ctx.stroke();
   ctx.restore();
 
-  /* --- inner iris ring --- */
+  /* === central circle === */
   ctx.save();
   ctx.beginPath();
-  ctx.arc(cx, cy, 55, 0, Math.PI * 2);
-  ctx.strokeStyle = "#ffffff";
-  ctx.lineWidth = 3;
-  ctx.shadowBlur = 25;
-  ctx.shadowColor = "rgba(255,255,255,0.7)";
+  ctx.arc(cx, cy, circleR, 0, Math.PI * 2);
+  ctx.strokeStyle = "#fff";
+  ctx.lineWidth = 4;
+  ctx.shadowBlur = 30;
+  ctx.shadowColor = "rgba(255,255,255,0.85)";
   ctx.stroke();
   ctx.restore();
 
-  /* --- pupil tracking --- */
+  /* === pupil tracking (small offset only) === */
   const dx = mouse.x - cx;
   const dy = mouse.y - cy;
-  const dist = Math.hypot(dx, dy);
-  const maxOffset = 20;
+  const d = Math.hypot(dx, dy);
+  const maxOffset = 18;
 
-  const px = cx + (dx / dist) * Math.min(dist, maxOffset);
-  const py = cy + (dy / dist) * Math.min(dist, maxOffset);
+  const px = cx + (dx / (d || 1)) * Math.min(d, maxOffset);
+  const py = cy + (dy / (d || 1)) * Math.min(d, maxOffset);
 
-  /* --- glowing pupil --- */
+  /* === inner orb === */
   ctx.save();
   ctx.beginPath();
   ctx.arc(px, py, 16, 0, Math.PI * 2);
-  ctx.fillStyle = "#ffffff";
-  ctx.shadowBlur = 30;
+  ctx.fillStyle = "#fff";
+  ctx.shadowBlur = 25;
   ctx.shadowColor = "rgba(255,255,255,1)";
   ctx.fill();
   ctx.restore();
 
-  /* --- tear / flourish (inspired curve) --- */
+  /* === tear curve === */
   ctx.save();
-  ctx.strokeStyle = "#ffffff";
+  ctx.strokeStyle = "#fff";
   ctx.lineWidth = 3;
-  ctx.shadowBlur = 30;
+  ctx.shadowBlur = 25;
   ctx.shadowColor = "rgba(255,255,255,0.8)";
-
   ctx.beginPath();
-  ctx.moveTo(cx - 10, cy + 40);
+  ctx.moveTo(cx + 8, cy + circleR - 5);
   ctx.bezierCurveTo(
-    cx - 50, cy + 90,
-    cx + 10, cy + 120,
-    cx + 25, cy + 70
+    cx + 30, cy + circleR + 40,
+    cx - 30, cy + circleR + 80,
+    cx + 6, cy + circleR + 110
   );
   ctx.stroke();
   ctx.restore();
 }
 
-/* ---------- Animate ---------- */
+/* animate */
 function animate() {
   drawEye();
   requestAnimationFrame(animate);
