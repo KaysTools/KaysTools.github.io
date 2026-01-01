@@ -12,7 +12,7 @@
       height: 100%;
       background: #000000;
       overflow: hidden;
-      cursor: default; /* restore normal cursor */
+      cursor: default;
     }
 
     canvas {
@@ -42,7 +42,6 @@ resize();
 /* ---------- Mouse ---------- */
 
 const mouse = { x: w / 2, y: h / 2 };
-
 window.addEventListener("mousemove", e => {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
@@ -51,16 +50,15 @@ window.addEventListener("mousemove", e => {
 /* ---------- Network ---------- */
 
 const NODE_COUNT = 120;
-const LINK_DISTANCE = 140;
-
+const LINK_DISTANCE = 150;
 const nodes = [];
 
 class Node {
   constructor() {
     this.x = Math.random() * w;
     this.y = Math.random() * h;
-    this.vx = (Math.random() - 0.5) * 0.9;
-    this.vy = (Math.random() - 0.5) * 0.9;
+    this.vx = (Math.random() - 0.5) * 1.1;
+    this.vy = (Math.random() - 0.5) * 1.1;
     this.r = 1.2;
   }
 
@@ -81,9 +79,10 @@ class Node {
 }
 
 function drawConnections() {
+  ctx.save();
   ctx.lineWidth = 0.5;
   ctx.shadowBlur = 6;
-  ctx.shadowColor = "rgba(255,255,255,0.3)";
+  ctx.shadowColor = "rgba(255,255,255,0.25)";
 
   for (let i = 0; i < nodes.length; i++) {
     for (let j = i + 1; j < nodes.length; j++) {
@@ -102,7 +101,7 @@ function drawConnections() {
     }
   }
 
-  ctx.shadowBlur = 0;
+  ctx.restore();
 }
 
 /* ---------- Eye ---------- */
@@ -111,40 +110,42 @@ function drawEye() {
   const cx = w / 2;
   const cy = h / 2;
 
-  const eyeRadiusX = 180;
-  const eyeRadiusY = 90;
+  const eyeRX = 190;
+  const eyeRY = 95;
 
-  // glow
+  /* sclera (white of eye) */
   ctx.save();
-  ctx.strokeStyle = "#ffffff";
-  ctx.lineWidth = 3;
-  ctx.shadowBlur = 40;
-  ctx.shadowColor = "rgba(255,255,255,0.9)";
   ctx.beginPath();
-  ctx.ellipse(cx, cy, eyeRadiusX, eyeRadiusY, 0, 0, Math.PI * 2);
-  ctx.stroke();
+  ctx.ellipse(cx, cy, eyeRX, eyeRY, 0, 0, Math.PI * 2);
+  ctx.fillStyle = "#ffffff";
+  ctx.shadowBlur = 40;
+  ctx.shadowColor = "rgba(255,255,255,0.85)";
+  ctx.fill();
   ctx.restore();
 
-  // pupil direction
+  /* pupil tracking */
   const dx = mouse.x - cx;
   const dy = mouse.y - cy;
   const angle = Math.atan2(dy, dx);
 
-  const maxOffset = 35;
-  const px = cx + Math.cos(angle) * maxOffset;
-  const py = cy + Math.sin(angle) * maxOffset;
+  const maxOffsetX = eyeRX * 0.28;
+  const maxOffsetY = eyeRY * 0.28;
 
-  // pupil
+  const px = cx + Math.cos(angle) * maxOffsetX;
+  const py = cy + Math.sin(angle) * maxOffsetY;
+
+  /* pupil */
   ctx.save();
   ctx.beginPath();
-  ctx.arc(px, py, 16, 0, Math.PI * 2);
+  ctx.arc(px, py, 22, 0, Math.PI * 2);
   ctx.fillStyle = "#000000";
   ctx.fill();
 
+  /* subtle neon rim */
+  ctx.lineWidth = 2;
   ctx.shadowBlur = 25;
   ctx.shadowColor = "rgba(255,255,255,0.8)";
   ctx.strokeStyle = "#ffffff";
-  ctx.lineWidth = 2;
   ctx.stroke();
   ctx.restore();
 }
