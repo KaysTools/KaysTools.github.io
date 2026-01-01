@@ -1,88 +1,126 @@
-/* =========================================================
+/* ==========================================================================
    COMPONENTS.CSS
-   Cards, inputs, picker, panels
-========================================================= */
+   Reusable UI components (inputs, panels, cards, pickers)
+   ========================================================================== */
 
-/* -------------------------
+/* --------------------------------------------------------------------------
    SEARCH PANEL
-------------------------- */
+-------------------------------------------------------------------------- */
 .search-panel {
   background: var(--bg-panel);
   border: 1px solid var(--border-soft);
   border-radius: 22px;
   padding: 28px;
-  box-shadow: 0 0 60px rgba(139,0,0,0.35);
+  box-shadow: 0 0 60px rgba(139, 0, 0, 0.35);
 }
 
-/* -------------------------
+/* --------------------------------------------------------------------------
    SEARCH ROW
-------------------------- */
+-------------------------------------------------------------------------- */
 .search-row {
   display: flex;
-  gap: 14px;
   align-items: center;
+  gap: 14px;
 }
 
-/* -------------------------
-   INPUTS
-------------------------- */
+/* --------------------------------------------------------------------------
+   INPUT FIELD
+-------------------------------------------------------------------------- */
 .input {
-  background: rgba(0,0,0,0.55);
+  width: 100%;
+  padding: 16px;
+
+  font-size: 0.875rem;
+  color: var(--text-main);
+
+  background-color: rgba(0, 0, 0, 0.55);
   border: 1px solid var(--border-soft);
   border-radius: 14px;
-  padding: 16px;
-  color: var(--text-main);
-  font-size: 14px;
-  width: 100%;
+
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .input::placeholder {
   color: var(--text-dim);
 }
 
-/* -------------------------
-   SEARCH BUTTON
-------------------------- */
-.btn-search {
-  padding: 16px 30px;
-  border-radius: 14px;
-  border: none;
-  background: linear-gradient(135deg, #a00000, #5a0000);
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
-  box-shadow: 0 0 30px var(--accent-glow);
+.input:focus-visible {
+  outline: none;
+  border-color: var(--accent-main);
+  box-shadow: 0 0 0 2px var(--accent-soft);
 }
 
-/* -------------------------
-   CUSTOM PICKER
-------------------------- */
+/* --------------------------------------------------------------------------
+   SEARCH BUTTON
+-------------------------------------------------------------------------- */
+.btn-search {
+  padding: 16px 30px;
+  min-width: 110px;
+
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #ffffff;
+
+  background: linear-gradient(135deg, #a00000, #5a0000);
+  border-radius: 14px;
+
+  box-shadow: 0 0 30px var(--accent-glow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-search:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 40px var(--accent-glow);
+}
+
+.btn-search:active {
+  transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   CUSTOM TARGET PICKER
+-------------------------------------------------------------------------- */
 .picker {
   position: relative;
   width: 170px;
 }
 
 .picker-toggle {
-  background: rgba(0,0,0,0.65);
+  width: 100%;
+  padding: 16px;
+
+  font-size: 0.8125rem;
+  text-align: left;
+  color: var(--text-main);
+
+  background-color: rgba(0, 0, 0, 0.65);
   border: 1px solid var(--border-soft);
   border-radius: 14px;
-  padding: 16px;
-  font-size: 13px;
-  color: var(--text-main);
+
   cursor: pointer;
   user-select: none;
+
+  transition: border-color 0.15s ease;
+}
+
+.picker-toggle:focus-visible {
+  outline: none;
+  border-color: var(--accent-main);
 }
 
 .picker-menu {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
+
   width: 100%;
+  z-index: 20;
+
   background: var(--bg-panel);
   border: 1px solid var(--border-soft);
   border-radius: 14px;
+
   overflow: hidden;
-  z-index: 20;
   display: none;
 }
 
@@ -92,37 +130,46 @@
 
 .picker-item {
   padding: 14px 16px;
-  font-size: 13px;
-  cursor: pointer;
+
+  font-size: 0.8125rem;
+  color: var(--text-main);
+
+  background: transparent;
   border-bottom: 1px solid var(--border-soft);
+
+  cursor: pointer;
+  transition: background-color 0.12s ease;
 }
 
 .picker-item:last-child {
   border-bottom: none;
 }
 
-.picker-item:hover {
-  background: var(--accent-soft);
+.picker-item:hover,
+.picker-item:focus-visible {
+  background-color: var(--accent-soft);
+  outline: none;
 }
 
-/* -------------------------
+/* --------------------------------------------------------------------------
    MODULE CARDS
-------------------------- */
+-------------------------------------------------------------------------- */
 .module {
   background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
   border-radius: 18px;
   padding: 22px;
-  border: 1px solid var(--border-soft);
+
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .module h3 {
-  font-size: 14px;
   margin-bottom: 8px;
+  font-size: 0.875rem;
 }
 
 .module p {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--text-muted);
 }
 
@@ -131,28 +178,32 @@
   box-shadow: 0 0 35px var(--accent-soft);
 }
 
-/* -------------------------
+/* --------------------------------------------------------------------------
    STATS
-------------------------- */
+-------------------------------------------------------------------------- */
 .stat strong {
-  font-size: 26px;
   display: block;
+  font-size: 1.625rem;
 }
 
 .stat span {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--text-muted);
 }
 
-/* -------------------------
-   MOBILE
-------------------------- */
+/* --------------------------------------------------------------------------
+   RESPONSIVE ADJUSTMENTS
+-------------------------------------------------------------------------- */
 @media (max-width: 720px) {
   .search-row {
     flex-direction: column;
   }
 
   .picker {
+    width: 100%;
+  }
+
+  .btn-search {
     width: 100%;
   }
 }
