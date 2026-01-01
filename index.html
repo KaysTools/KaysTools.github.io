@@ -13,7 +13,7 @@
             align-items: center;
             background: #000; /* Dark GD-style background */
             overflow: hidden;
-            cursor: default; /* Show normal cursor again */
+            cursor: default; /* Show normal cursor */
         }
 
         .eye-container {
@@ -37,7 +37,7 @@
             position: absolute;
             width: 150px;
             height: 150px;
-            background: radial-gradient(circle, #00aaff, #0066cc);
+            background: radial-gradient(circle, #ff3333, #8B0000); /* Lighter red center to dark red edge */
             border-radius: 50%;
             top: 75px;
             left: 75px;
@@ -53,7 +53,7 @@
             border-radius: 50%;
             top: 45px;
             left: 45px;
-            box-shadow: 0 0 15px rgba(0, 0, 255, 0.8);
+            box-shadow: 0 0 15px rgba(139, 0, 0, 0.8); /* Dark red glow to match */
         }
 
         .glare {
@@ -89,7 +89,7 @@
             const eyeY = rect.top + rect.height / 2;
 
             const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
-            const distance = Math.min(45, Math.hypot(e.clientX - eyeX, e.clientY - eyeY) / 10); // Adjusted limit for smaller eye
+            const distance = Math.min(45, Math.hypot(e.clientX - eyeX, e.clientY - eyeY) / 10);
 
             const offsetX = Math.cos(angle) * distance;
             const offsetY = Math.sin(angle) * distance;
