@@ -1,72 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>KAYTOOLS</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- META -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>KAYTOOLS — Open-Source Intelligence Toolkit</title>
+  <meta name="description" content="KAYTOOLS is a browser-based OSINT platform for investigating digital footprints across infrastructure, identity, and exposure data.">
 
   <!-- STYLES -->
   <link rel="stylesheet" href="assets/css/base.css">
   <link rel="stylesheet" href="assets/css/layout.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/effects.css">
+
+  <!-- FAVICON (optional, recommended) -->
+  <!-- <link rel="icon" href="assets/favicon.ico"> -->
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <div class="logo">
-      <div class="logo-icon"></div>
-      <span>KAYTOOLS</span>
+  <!-- SITE HEADER -->
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-icon" aria-hidden="true"></div>
+      <span class="brand-name">KAYTOOLS</span>
     </div>
 
-    <nav>
-      <a href="#">Home</a>
-      <a href="#">Modules</a>
-      <a href="#">API</a>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a href="/" aria-current="page">Home</a>
+      <a href="#modules">Modules</a>
+      <a href="#api">API</a>
     </nav>
   </header>
 
-  <!-- MAIN -->
-  <main>
+  <!-- MAIN CONTENT -->
+  <main id="main-content">
 
     <!-- HERO -->
-    <section class="hero">
-      <h1>Investigate Digital Footprints</h1>
-      <p class="subtitle">
+    <section class="hero" aria-labelledby="hero-title">
+      <h1 id="hero-title">Investigate Digital Footprints</h1>
+      <p class="hero-subtitle">
         Open-source intelligence tools for identity, infrastructure, and exposure analysis.
       </p>
     </section>
 
-    <!-- SEARCH -->
-    <section class="section section-narrow">
+    <!-- SEARCH PANEL -->
+    <section class="section section-narrow" aria-labelledby="search-title">
+      <h2 id="search-title" class="visually-hidden">Search Intelligence Modules</h2>
+
       <div class="search-panel">
 
         <div class="search-row">
 
-          <!-- CUSTOM PICKER -->
-          <div class="picker">
-            <div class="picker-toggle">IP Address</div>
-            <div class="picker-menu">
-              <div class="picker-item" data-type="ip">IP Address</div>
-              <div class="picker-item" data-type="domain">Domain</div>
-              <div class="picker-item" data-type="email">Email</div>
-              <div class="picker-item" data-type="username">Username</div>
+          <!-- TARGET TYPE PICKER -->
+          <div class="picker" data-picker>
+            <button
+              type="button"
+              class="picker-toggle"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+            >
+              IP Address
+            </button>
+
+            <div class="picker-menu" role="listbox">
+              <button class="picker-item" role="option" data-type="ip">IP Address</button>
+              <button class="picker-item" role="option" data-type="domain">Domain</button>
+              <button class="picker-item" role="option" data-type="email">Email</button>
+              <button class="picker-item" role="option" data-type="username">Username</button>
             </div>
           </div>
 
-          <!-- INPUT -->
+          <!-- SEARCH INPUT -->
           <input
+            id="search-input"
             class="input"
-            id="searchInput"
             type="text"
             placeholder="Enter target value"
             autocomplete="off"
-          />
+            spellcheck="false"
+            aria-label="Target value"
+          >
 
-          <!-- BUTTON -->
-          <button class="btn-search" id="searchBtn">
+          <!-- SEARCH BUTTON -->
+          <button
+            id="search-button"
+            class="btn-search"
+            type="button"
+          >
             Search
           </button>
 
@@ -75,53 +97,79 @@
       </div>
     </section>
 
-    <!-- MODULES -->
-    <section class="section section-wide">
-      <div class="modules">
+    <!-- MODULE OVERVIEW -->
+    <section id="modules" class="section section-wide" aria-labelledby="modules-title">
+      <h2 id="modules-title" class="section-title">Core Intelligence Modules</h2>
 
-        <div class="module">
+      <div class="modules-grid">
+
+        <article class="module">
           <h3>Infrastructure Intelligence</h3>
-          <p>IP ranges, ASN data, hosting providers, exposed services.</p>
-        </div>
+          <p>
+            IP ranges, ASN metadata, hosting providers, exposed services, and network attribution.
+          </p>
+        </article>
 
-        <div class="module">
+        <article class="module">
           <h3>Identity Correlation</h3>
-          <p>Usernames, emails, alias reuse across platforms.</p>
-        </div>
+          <p>
+            Username reuse, email linkage, alias discovery, and cross-platform presence.
+          </p>
+        </article>
 
-        <div class="module">
+        <article class="module">
           <h3>Breach Analysis</h3>
-          <p>Public breach indexing and exposure indicators.</p>
-        </div>
+          <p>
+            Public breach indexing, credential exposure indicators, and historical leak context.
+          </p>
+        </article>
 
-        <div class="module">
+        <article class="module">
           <h3>Relationship Mapping</h3>
-          <p>Entity links, shared infrastructure, attribution clues.</p>
-        </div>
+          <p>
+            Entity relationships, shared infrastructure, behavioral overlap, and attribution signals.
+          </p>
+        </article>
 
       </div>
     </section>
 
-    <!-- STATS -->
-    <section class="stats">
+    <!-- PLATFORM STATS -->
+    <section class="stats" aria-label="Platform statistics">
+
       <div class="stat">
         <strong>15+</strong>
         <span>Public Data Sources</span>
       </div>
+
       <div class="stat">
         <strong>100%</strong>
-        <span>On-Site Queries</span>
+        <span>Client-Side Queries</span>
       </div>
+
       <div class="stat">
         <strong>0</strong>
         <span>Tracking Cookies</span>
       </div>
+
     </section>
 
   </main>
 
-  <!-- JS -->
+  <!-- FOOTER (optional but recommended) -->
+  <footer class="site-footer">
+    <p>
+      © <span id="year"></span> KAYTOOLS · Open-Source Intelligence Platform
+    </p>
+  </footer>
+
+  <!-- JAVASCRIPT -->
   <script type="module" src="assets/js/ui.js"></script>
+
+  <!-- SMALL INLINE UTIL (safe) -->
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 
 </body>
 </html>
